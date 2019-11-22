@@ -82,7 +82,7 @@ export default class ActionMetadata {
      * @returns
      * @memberof ActionMetadata
      */
-    call(srv: any, req: any, next: any) {
+    async call(srv: any, req: any, next: any): Promise<any> {
         const handlerInstance = this.handlerMetadata.instance;
         return handlerInstance[this.method].apply(handlerInstance, [srv, req, next]);
     }

@@ -22,20 +22,20 @@ export default class CDSHandler {
             handler.actions.forEach(action => {
                 switch (action.handler) {
                     case HandlerType.Before:
-                        srv.before(action.operation, action.entity, (req: any, next: any) => {
-                            action.call(srv, req, next);
+                        srv.before(action.operation, action.entity, async (req: any, next: any) => {
+                            return await action.call(srv, req, next);
                         });
                         break;
 
                     case HandlerType.On:
-                        srv.on(action.operation, action.entity, (req: any, next: any) => {
-                            action.call(srv, req, next);
+                        srv.on(action.operation, action.entity, async (req: any, next: any) => {
+                            return await action.call(srv, req, next);
                         });
                         break;
 
                     case HandlerType.After:
-                        srv.after(action.operation, action.entity, (req: any, next: any) => {
-                            action.call(srv, req, next);
+                        srv.after(action.operation, action.entity, async (req: any, next: any) => {
+                            return await action.call(srv, req, next);
                         });
                 }
             });
