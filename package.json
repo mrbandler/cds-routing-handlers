@@ -1,0 +1,46 @@
+{
+    "name": "cds-routing-handlers",
+    "version": "1.0.0",
+    "description": "Package to route and implement CDS handlers via a class based approach in Typescript.",
+    "main": "lib/index.js",
+    "repository": "https://github.com/mrbandler/cds-routing-handlers",
+    "author": "mrbandler <mrbandler@fivefingergames.com>",
+    "license": "MIT",
+    "readme": "README.md",
+    "bugs": {
+        "url": "https://github.com/mrbandler/cds-routing-handlers/issues"
+    },
+    "tags": [
+        "typescript",
+        "controller",
+        "handler",
+        "cds",
+        "sap"
+    ],
+    "files": [
+        "lib"
+    ],
+    "scripts": {
+        "build": "tsc"
+    },
+    "devDependencies": {
+        "@commitlint/cli": "^8.2.0",
+        "@commitlint/config-conventional": "^8.2.0",
+        "@commitlint/format": "^8.2.0",
+        "@commitlint/is-ignored": "^8.2.0",
+        "@types/node": "^12.12.11",
+        "@typescript-eslint/parser": "^2.8.0",
+        "conventional-changelog-atom": "^2.0.3",
+        "eslint": "^6.6.0",
+        "eslint-config-prettier": "^6.7.0",
+        "eslint-plugin-prettier": "^3.1.1",
+        "husky": "^3.1.0",
+        "lint-staged": "^9.4.3",
+        "prettier": "^1.19.1",
+        "typescript": "^3.7.2"
+    },
+    "dependencies": {
+        "glob": "^7.1.6",
+        "reflect-metadata": "^0.1.13"
+    }
+}
