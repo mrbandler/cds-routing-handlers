@@ -12,6 +12,9 @@ build:
     script:
         - yarn install
         - yarn build
+    artifacts:
+        paths:
+            - ./lib
 
 ##############################################################
 # Running unit tests.
