@@ -1,4 +1,19 @@
 /**
+ * Container options.
+ */
+export interface IUseContainerOptions {
+    /**
+     * If set to true, then default container will be used in the case if given container haven't returned anything.
+     */
+    fallback?: boolean;
+
+    /**
+     * If set to true, then default container will be used in the case if given container thrown an exception.
+     */
+    fallbackOnErrors?: boolean;
+}
+
+/**
  * Container to be used by this library for inversion control. If container was not implicitly set then by default
  * container simply creates a new instance of the given class.
  */
@@ -16,12 +31,29 @@ const defaultContainer: { get<T>(someClass: { new (...args: any[]): T } | Functi
 })();
 
 let userContainer: { get<T>(someClass: { new (...args: any[]): T } | Function): T };
+let userContainerOptions: IUseContainerOptions | undefined;
+
+/**
+ * Sets container to be used by this library.
+ */
+export function useContainer(iocContainer: { get(someClass: any): any }, options?: IUseContainerOptions) {
+    userContainer = iocContainer;
+    userContainerOptions = options;
+}
 
 /**
  * Gets the IOC container used by this library.
  */
 export function getFromContainer<T>(someClass: { new (...args: any[]): T } | Function): T {
-    const instance = userContainer.get(someClass);
-    if (instance) return instance;
+    if (userContainer) {
+        try {
+            const instance = userContainer.get(someClass);
+            if (instance) return instance;
+
+            if (!userContainerOptions || !userContainerOptions.fallback) return instance;
+        } catch (error) {
+            if (!userContainerOptions || !userContainerOptions.fallbackOnErrors) throw error;
+        }
+    }
     return defaultContainer.get<T>(someClass);
 }
