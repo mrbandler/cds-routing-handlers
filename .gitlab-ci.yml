@@ -1,0 +1,42 @@
+##############################################################
+# Build that shit.
+##############################################################
+build:
+    stage: build
+    image: node
+    only:
+        - master
+        - develop
+    except:
+        - tags
+    script:
+        - yarn install
+        - yarn build
+
+##############################################################
+# Running unit tests.
+##############################################################
+# test/unit-testing:
+#     stage: test
+#     image: microsoft/dotnet:latest
+#     except:
+#         - tags
+#     before_script:
+#         - bash ./gen-kos-safe-core.sh
+#     script:
+#         - dotnet test
+#     dependencies: []
+
+##############################################################
+# Deployment.
+##############################################################
+deploy/npm:
+    stage: deploy
+    image: node
+    only:
+        - master
+    except:
+        - tags
+    script:
+        - echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > .npmrc
+        - npm publish
