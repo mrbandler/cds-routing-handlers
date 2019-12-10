@@ -2,11 +2,17 @@ import * as path from "path";
 import CDSHandler from "./CDSHandler";
 import { MetadataArgsStorage } from "./metadata-builder/MetadataArgsStorage";
 
-export * from "./decorators/Handler";
-export * from "./decorators/Create";
-export * from "./decorators/Read";
-export * from "./decorators/Update";
-export * from "./decorators/Delete";
+export * from "./decorators/class/Handler";
+export * from "./decorators/method/Create";
+export * from "./decorators/method/Read";
+export * from "./decorators/method/Update";
+export * from "./decorators/method/Delete";
+export * from "./decorators/method/Reject";
+export * from "./decorators/param/Srv";
+export * from "./decorators/param/Req";
+export * from "./decorators/param/Next";
+export * from "./decorators/param/ParamObj";
+export * from "./decorators/param/Param";
 
 /**
  * Returns the metadata arguments storage.

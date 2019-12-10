@@ -2,6 +2,10 @@ import HandlerMetadata from "./HandlerMetadata";
 import { HandlerType } from "../types/HandlerType";
 import { OperationType } from "../types/OperationType";
 import IActionMetadataArgs from "./args/IActionMetadataArgs";
+import RejectMetadata from "./RejectMetadata";
+import IRejectMetadataArgs from "./args/IRejectMetadataArgs";
+import ParamMetadata from "./ParamMetadata";
+import { ParamType } from "../types/ParamType";
 
 /**
  * Action metadata.
@@ -40,7 +44,7 @@ export default class ActionMetadata {
      * @type {string}
      * @memberof ActionMetadata
      */
-    entity: string;
+    entity?: string;
 
     /**
      * Handler type.
@@ -59,6 +63,30 @@ export default class ActionMetadata {
     operation: OperationType;
 
     /**
+     * Function import name.
+     *
+     * @type {string}
+     * @memberof ActionMetadata
+     */
+    functionImportName?: string;
+
+    /**
+     * Reject
+     *
+     * @type {RejectMetadata}
+     * @memberof ActionMetadata
+     */
+    reject?: RejectMetadata;
+
+    /**
+     * Parameter metadata.
+     *
+     * @type {ParamMetadata[]}
+     * @memberof ActionMetadata
+     */
+    params: ParamMetadata[] = [];
+
+    /**
      * Default constructor.
      * @param {HandlerMetadata} handlerMetadata Handler metadata.
      * @param {IActionMetadataArgs} args Action metadata arguments.
@@ -71,6 +99,19 @@ export default class ActionMetadata {
         this.method = args.method;
         this.handler = args.handler;
         this.operation = args.operation;
+        this.functionImportName = args.functionImportName;
+    }
+
+    /**
+     * Sets the reject metadata.
+     *
+     * @param {IRejectMetadataArgs} args Reject metadata arguments
+     * @memberof ActionMetadata
+     */
+    public setReject(args: IRejectMetadataArgs | undefined): void {
+        if (args) {
+            this.reject = new RejectMetadata(args);
+        }
     }
 
     /**
@@ -82,8 +123,71 @@ export default class ActionMetadata {
      * @returns
      * @memberof ActionMetadata
      */
-    call(srv: any, req: any, next: any) {
+    public async exec(srv: any, req: any, next: any): Promise<any> {
         const handlerInstance = this.handlerMetadata.instance;
-        return handlerInstance[this.method].apply(handlerInstance, [srv, req, next]);
+        const params = this.buildParams(srv, req, next);
+
+        if (this.reject) {
+            try {
+                return handlerInstance[this.method].apply(handlerInstance, params);
+            } catch (error) {
+                req.reject(this.reject.code, `${this.reject.message}: ${error.message}`);
+            }
+        } else {
+            return handlerInstance[this.method].apply(handlerInstance, params);
+        }
+    }
+
+    /**
+     * Builds a paramters list out if all defined paramter decorators.
+     *
+     * @private
+     * @param {*} srv
+     * @param {*} req
+     * @param {*} next
+     * @returns {any[]}
+     * @memberof ActionMetadata
+     */
+    private buildParams(srv: any, req: any, next: any): any[] {
+        const sortedParams = this.params.sort((a, b) => {
+            if (a > b) return 1;
+            if (b > a) return -1;
+
+            return 0;
+        });
+
+        return sortedParams.map(param => {
+            switch (param.type) {
+                case ParamType.Srv:
+                    return srv;
+                case ParamType.Req:
+                    return req;
+                case ParamType.Next:
+                    return next;
+                case ParamType.ParamObj:
+                    return req.data;
+                case ParamType.Param:
+                    return this.buildParam(param, req);
+            }
+        });
+    }
+
+    /**
+     * Reads a parameter from the request data object.
+     *
+     * @private
+     * @param {ParamMetadata} param Param to read from the object
+     * @param {*} req Request to read it from
+     * @returns {*}
+     * @memberof ActionMetadata
+     */
+    private buildParam(param: ParamMetadata, req: any): any {
+        let result = undefined;
+
+        if (param.name) {
+            result = req.data[param.name];
+        }
+
+        return result;
     }
 }

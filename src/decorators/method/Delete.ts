@@ -1,54 +1,54 @@
-import { getMetadataArgsStorage } from "../index";
-import { HandlerType } from "../types/HandlerType";
-import { OperationType } from "../types/OperationType";
+import { getMetadataArgsStorage } from "../../index";
+import { OperationType } from "../../types/OperationType";
+import { HandlerType } from "../../types/HandlerType";
 
 /**
- * Before update handler decorator.
+ * Before delete handler decorator.
  *
  * @export
  * @returns {MethodDecorator}
  */
-export function BeforeUpdate(): MethodDecorator {
+export function BeforeDelete(): MethodDecorator {
     return (target: Object, key: string | symbol, descriptor: PropertyDescriptor) => {
         getMetadataArgsStorage().addActionMetadata({
             target: target.constructor,
             method: key as string,
             handler: HandlerType.Before,
-            operation: OperationType.Update,
+            operation: OperationType.Delete,
         });
     };
 }
 
 /**
- * On update handler decorator.
+ * On delete handler decorator.
  *
  * @export
  * @returns {MethodDecorator}
  */
-export function OnUpdate(): MethodDecorator {
+export function OnDelete(): MethodDecorator {
     return (target: Object, key: string | symbol, descriptor: PropertyDescriptor) => {
         getMetadataArgsStorage().addActionMetadata({
             target: target.constructor,
             method: key as string,
             handler: HandlerType.On,
-            operation: OperationType.Update,
+            operation: OperationType.Delete,
         });
     };
 }
 
 /**
- * After update handler decorator.
+ * After delete handler decorator.
  *
  * @export
  * @returns {MethodDecorator}
  */
-export function AfterUpdate(): MethodDecorator {
+export function AfterDelete(): MethodDecorator {
     return (target: Object, key: string | symbol, descriptor: PropertyDescriptor) => {
         getMetadataArgsStorage().addActionMetadata({
             target: target.constructor,
             method: key as string,
             handler: HandlerType.After,
-            operation: OperationType.Update,
+            operation: OperationType.Delete,
         });
     };
 }
