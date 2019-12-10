@@ -29,6 +29,7 @@
         "@commitlint/format": "^8.2.0",
         "@commitlint/is-ignored": "^8.2.0",
         "@types/node": "^12.12.11",
+        "@typescript-eslint/eslint-plugin": "^2.11.0",
         "@typescript-eslint/parser": "^2.8.0",
         "conventional-changelog-atom": "^2.0.3",
         "eslint": "^6.6.0",
