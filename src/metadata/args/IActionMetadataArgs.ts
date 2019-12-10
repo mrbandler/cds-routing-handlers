@@ -39,4 +39,12 @@ export default interface IActionMetadataArgs {
      * @memberof IActionMetadataArgs
      */
     operation: OperationType;
+
+    /**
+     * Function import name.
+     *
+     * @type {string}
+     * @memberof IActionMetadataArgs
+     */
+    functionImportName?: string;
 }

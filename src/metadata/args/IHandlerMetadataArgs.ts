@@ -19,5 +19,5 @@ export default interface IHandlerMetadataArgs {
      * @type {string}
      * @memberof IHandlerMetadataArgs
      */
-    entity: string;
+    entity?: string;
 }

@@ -9,4 +9,6 @@ export enum OperationType {
     Read = "READ",
     Update = "UPDATE",
     Delete = "DELETE",
+    Function = "FUNC",
+    Action = "ACTION",
 }

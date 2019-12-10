@@ -23,7 +23,7 @@ export default class HandlerMetadata {
      * @type {string}
      * @memberof HandlerMetadata
      */
-    entity: string;
+    entity?: string;
 
     /**
      * Actions metadata.
