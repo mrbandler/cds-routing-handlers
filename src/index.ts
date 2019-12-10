@@ -8,6 +8,8 @@ export * from "./decorators/method/Read";
 export * from "./decorators/method/Update";
 export * from "./decorators/method/Delete";
 export * from "./decorators/method/Reject";
+export * from "./decorators/method/Func";
+export * from "./decorators/method/Action";
 export * from "./decorators/param/Srv";
 export * from "./decorators/param/Req";
 export * from "./decorators/param/Next";
