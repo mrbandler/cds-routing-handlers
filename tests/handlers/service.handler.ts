@@ -1,4 +1,4 @@
-import { Handler, Func, Action, Param, ParamObj, Req, Srv } from "../../lib";
+import { Handler, Func, Action, Param, ParamObj, Req, Srv, Jwt } from "../../lib";
 
 interface IParams {
     title: string;
@@ -8,7 +8,7 @@ interface IParams {
 @Handler()
 export class ServiceHandler {
     @Func("hello")
-    public async hello(@Req() req: any, @Param("name") name: string): Promise<string> {
+    public async hello(@Req() req: any, @Param("name") name: string, @Jwt() jwt: string): Promise<string> {
         console.log(req);
         return "Hello, " + name;
     }

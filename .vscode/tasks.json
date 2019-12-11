@@ -5,10 +5,10 @@
     "tasks": [
         {
             "type": "npm",
-            "script": "build:test",
+            "script": "build:all",
             "group": "build",
             "problemMatcher": [],
-            "label": "build:test"
+            "label": "Build All"
         }
     ]
 }
