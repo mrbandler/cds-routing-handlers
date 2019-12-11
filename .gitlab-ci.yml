@@ -3,7 +3,7 @@
 ##############################################################
 build:
     stage: build
-    image: node
+    image: node:10
     only:
         - master
         - develop
@@ -17,25 +17,11 @@ build:
             - ./lib
 
 ##############################################################
-# Running unit tests.
-##############################################################
-# test/unit-testing:
-#     stage: test
-#     image: microsoft/dotnet:latest
-#     except:
-#         - tags
-#     before_script:
-#         - bash ./gen-kos-safe-core.sh
-#     script:
-#         - dotnet test
-#     dependencies: []
-
-##############################################################
 # Deployment.
 ##############################################################
 deploy/npm:
     stage: deploy
-    image: node
+    image: node:10
     only:
         - master
     except:

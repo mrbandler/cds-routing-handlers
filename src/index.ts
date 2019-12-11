@@ -2,6 +2,7 @@ import * as path from "path";
 import CDSHandler from "./CDSHandler";
 import { MetadataArgsStorage } from "./metadata-builder/MetadataArgsStorage";
 
+export * from "./container";
 export * from "./decorators/class/Handler";
 export * from "./decorators/method/Create";
 export * from "./decorators/method/Read";
