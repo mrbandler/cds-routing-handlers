@@ -53,8 +53,8 @@ export default class CDSHandler {
      */
     private static registerBeforeHandler(srv: any, action: ActionMetadata): void {
         if (action.entity !== undefined) {
-            srv.before(action.operation, action.entity, async (req: any, next: any) => {
-                return await action.exec(srv, req, next);
+            srv.before(action.operation, action.entity, async (req: any) => {
+                return await action.exec(srv, req);
             });
         }
     }
@@ -70,8 +70,8 @@ export default class CDSHandler {
      */
     private static registerOnHandler(srv: any, action: ActionMetadata): void {
         if (action.entity !== undefined) {
-            srv.on(action.operation, action.entity, async (req: any, next: any) => {
-                return await action.exec(srv, req, next);
+            srv.on(action.operation, action.entity, async (req: any) => {
+                return await action.exec(srv, req);
             });
         }
     }
@@ -87,8 +87,8 @@ export default class CDSHandler {
      */
     private static registerAfterHandler(srv: any, action: ActionMetadata): void {
         if (action.entity !== undefined) {
-            srv.after(action.operation, action.entity, async (req: any, next: any) => {
-                return await action.exec(srv, req, next);
+            srv.after(action.operation, action.entity, async (req: any) => {
+                return await action.exec(srv, req);
             });
         }
     }
@@ -104,12 +104,12 @@ export default class CDSHandler {
      */
     private static registerFunctionImportHandler(srv: any, action: ActionMetadata): void {
         if (action.entity === undefined) {
-            srv.on(action.functionImportName, async (req: any, next: any) => {
-                return await action.exec(srv, req, next);
+            srv.on(action.functionImportName, async (req: any) => {
+                return await action.exec(srv, req);
             });
         } else {
-            srv.on(action.functionImportName, action.entity, async (req: any, next: any) => {
-                return await action.exec(srv, req, next);
+            srv.on(action.functionImportName, action.entity, async (req: any) => {
+                return await action.exec(srv, req);
             });
         }
     }

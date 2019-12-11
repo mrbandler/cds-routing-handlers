@@ -2,15 +2,13 @@
     "compilerOptions": {
         "target": "es5",
         "module": "commonjs",
-        "declaration": true,
         "sourceMap": true,
-        "outDir": "./lib",
-        "rootDir": "./src",
+        "outDir": "../srv",
+        "rootDir": ".",
         "strict": true,
         "esModuleInterop": true,
         "experimentalDecorators": true,
         "emitDecoratorMetadata": true,
         "forceConsistentCasingInFileNames": true
-    },
-    "exclude": ["./tests", "node_modules"]
+    }
 }

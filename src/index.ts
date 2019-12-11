@@ -12,7 +12,6 @@ export * from "./decorators/method/Func";
 export * from "./decorators/method/Action";
 export * from "./decorators/param/Srv";
 export * from "./decorators/param/Req";
-export * from "./decorators/param/Next";
 export * from "./decorators/param/ParamObj";
 export * from "./decorators/param/Param";
 

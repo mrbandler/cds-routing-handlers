@@ -1,6 +1,6 @@
 {
     "name": "cds-routing-handlers",
-    "version": "1.1.1",
+    "version": "1.1.2",
     "description": "Package to route and implement CDS handlers via a class based approach in Typescript.",
     "main": "lib/index.js",
     "repository": "https://github.com/mrbandler/cds-routing-handlers",
@@ -21,23 +21,31 @@
         "lib"
     ],
     "scripts": {
-        "build": "tsc"
+        "build": "tsc",
+        "build:all": "rimraf ./lib && yarn build && yarn build:test",
+        "build:test": "tsc --project ./tests/tsconfig.json && copyfiles -f ./tests/service.cds ./srv && cds build/all --clean",
+        "start:test": "yarn build:test && node --inspect ./srv/server.js"
     },
     "devDependencies": {
         "@commitlint/cli": "^8.2.0",
         "@commitlint/config-conventional": "^8.2.0",
         "@commitlint/format": "^8.2.0",
         "@commitlint/is-ignored": "^8.2.0",
+        "@sap/cds": "^3.20.1",
+        "@types/express": "^4.17.2",
         "@types/node": "^12.12.11",
         "@typescript-eslint/eslint-plugin": "^2.11.0",
         "@typescript-eslint/parser": "^2.8.0",
         "conventional-changelog-atom": "^2.0.3",
+        "copyfiles": "^2.1.1",
         "eslint": "^6.6.0",
         "eslint-config-prettier": "^6.7.0",
         "eslint-plugin-prettier": "^3.1.1",
+        "express": "^4.17.1",
         "husky": "^3.1.0",
         "lint-staged": "^9.4.3",
         "prettier": "^1.19.1",
+        "rimraf": "^3.0.0",
         "typescript": "^3.7.2"
     },
     "dependencies": {
@@ -61,5 +69,18 @@
         "*.{js,ts}": [
             "eslint --fix"
         ]
+    },
+    "cds": {
+        "requires": {
+            "db": {
+                "kind": "hana",
+                "model": [
+                    "srv"
+                ]
+            }
+        },
+        "odata": {
+            "version": "v4"
+        }
     }
 }

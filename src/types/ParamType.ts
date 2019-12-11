@@ -7,7 +7,6 @@
 export enum ParamType {
     Srv,
     Req,
-    Next,
     ParamObj,
     Param,
 }

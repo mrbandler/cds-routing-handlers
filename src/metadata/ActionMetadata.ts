@@ -123,19 +123,29 @@ export default class ActionMetadata {
      * @returns
      * @memberof ActionMetadata
      */
-    public async exec(srv: any, req: any, next: any): Promise<any> {
+    public async exec(srv: any, req: any): Promise<any> {
+        let result;
+
         const handlerInstance = this.handlerMetadata.instance;
-        const params = this.buildParams(srv, req, next);
+        const params = this.buildParams(srv, req);
 
         if (this.reject) {
             try {
-                return handlerInstance[this.method].apply(handlerInstance, params);
+                result = handlerInstance[this.method].apply(handlerInstance, params);
             } catch (error) {
-                req.reject(this.reject.code, `${this.reject.message}: ${error.message}`);
+                if (this.reject.appendErrorMessage) {
+                    req.reject(this.reject.code, `${this.reject.message}: ${error.message}`);
+                } else {
+                    req.reject(this.reject.code, this.reject.message);
+                }
+
+                return;
             }
         } else {
-            return handlerInstance[this.method].apply(handlerInstance, params);
+            result = handlerInstance[this.method].apply(handlerInstance, params);
         }
+
+        return result;
     }
 
     /**
@@ -148,10 +158,10 @@ export default class ActionMetadata {
      * @returns {any[]}
      * @memberof ActionMetadata
      */
-    private buildParams(srv: any, req: any, next: any): any[] {
+    private buildParams(srv: any, req: any): any[] {
         const sortedParams = this.params.sort((a, b) => {
-            if (a > b) return 1;
-            if (b > a) return -1;
+            if (a.index > b.index) return 1;
+            if (b.index > a.index) return -1;
 
             return 0;
         });
@@ -162,8 +172,6 @@ export default class ActionMetadata {
                     return srv;
                 case ParamType.Req:
                     return req;
-                case ParamType.Next:
-                    return next;
                 case ParamType.ParamObj:
                     return req.data;
                 case ParamType.Param:
