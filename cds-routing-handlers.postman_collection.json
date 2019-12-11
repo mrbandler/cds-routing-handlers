@@ -1,0 +1,225 @@
+{
+	"info": {
+		"_postman_id": "ab3c5961-53aa-41c9-a813-445e56c14d4f",
+		"name": "cds-routing-handlers",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "hello Function Import",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text",
+						"disabled": true
+					},
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3001/odata/hello(name='test')",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"odata",
+						"hello(name='test')"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "hello Function Import (v2)",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text",
+						"disabled": true
+					},
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3001/v2/odata/hello?name=test",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"v2",
+						"odata",
+						"hello"
+					],
+					"query": [
+						{
+							"key": "name",
+							"value": "test"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "greeter Action Import",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"title\": \"test-title\",\n\t\"name\": \"test-name\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3001/odata/greeter",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"odata",
+						"greeter"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "greeter Action Import (v2)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"title\": \"test-title\",\n\t\"name\": \"test-name\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3001/v2/odata/greeter?title=noop&name=sepp",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"v2",
+						"odata",
+						"greeter"
+					],
+					"query": [
+						{
+							"key": "title",
+							"value": "noop"
+						},
+						{
+							"key": "name",
+							"value": "sepp"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "READ Greeter Entity",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:3001/odata/Greeter",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"odata",
+						"Greeter"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "READ Greeter Entity (v2)",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:3001/v2/odata/Greeter",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"v2",
+						"odata",
+						"Greeter"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}

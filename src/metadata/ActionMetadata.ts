@@ -1,10 +1,11 @@
+import * as cloud from "@sap/cloud-sdk-core";
+import IActionMetadataArgs from "./args/IActionMetadataArgs";
+import IRejectMetadataArgs from "./args/IRejectMetadataArgs";
 import HandlerMetadata from "./HandlerMetadata";
+import RejectMetadata from "./RejectMetadata";
+import ParamMetadata from "./ParamMetadata";
 import { HandlerType } from "../types/HandlerType";
 import { OperationType } from "../types/OperationType";
-import IActionMetadataArgs from "./args/IActionMetadataArgs";
-import RejectMetadata from "./RejectMetadata";
-import IRejectMetadataArgs from "./args/IRejectMetadataArgs";
-import ParamMetadata from "./ParamMetadata";
 import { ParamType } from "../types/ParamType";
 
 /**
@@ -176,6 +177,8 @@ export default class ActionMetadata {
                     return req.data;
                 case ParamType.Param:
                     return this.buildParam(param, req);
+                case ParamType.Jwt:
+                    return this.retrieveJwt(req);
             }
         });
     }
@@ -197,5 +200,9 @@ export default class ActionMetadata {
         }
 
         return result;
+    }
+
+    private retrieveJwt(req: any): string | undefined {
+        return cloud.retrieveJwt(req._.req);
     }
 }

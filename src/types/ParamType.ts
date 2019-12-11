@@ -9,4 +9,5 @@ export enum ParamType {
     Req,
     ParamObj,
     Param,
+    Jwt,
 }
