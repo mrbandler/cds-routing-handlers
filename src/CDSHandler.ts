@@ -2,7 +2,6 @@ import MetadataBuilder from "./metadata-builder/MetadataBuilder";
 import { HandlerType } from "./types/HandlerType";
 import { OperationType } from "./types/OperationType";
 import ActionMetadata from "./metadata/ActionMetadata";
-import { isPromiseLike } from "./utils/isPromiseLike";
 
 /**
  * CDS Handler.
