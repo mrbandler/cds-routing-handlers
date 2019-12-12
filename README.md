@@ -83,6 +83,42 @@ cds.serve("./gen/")
     .with(createCombinedHandler([EntityHandler]));
 ```
 
+### Depencency Injection Support
+
+cds-routing-handlers can be used in conjunction with [typedi](https://github.com/typestack/typedi).
+
+```typescript
+import { useContainer } from "cds-routing-handlers";
+import { Container } from "typedi";
+
+useContainer(Container);
+```
+
+That's it now you can inject service into your handler classes.
+
+```typescript
+import { Handler, Func, Param } from "cds-routing-handlers";
+import { Service, Inject } from "typedi";
+
+@Service()
+export class GreeterService {
+    public greet(name: string): string {
+        return "Hello, " + name;
+    }
+}
+
+@Handler()
+export class GreeterHandler {
+    @Inject()
+    private greeterService: GreeterService;
+
+    @Func("hello")
+    public async hello(@Param("name") name: string): Promise<string> {
+        return this.greeterService.greet(name);
+    }
+}
+```
+
 ### Complete API
 
 ```typescript

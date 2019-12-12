@@ -1,4 +1,6 @@
 import { Handler, Func, Action, Param, ParamObj, Req, Srv, Jwt } from "../../lib";
+import { GreeterService } from "../services/greeter.service";
+import { Inject } from "typedi";
 
 interface IParams {
     title: string;
@@ -7,10 +9,13 @@ interface IParams {
 
 @Handler()
 export class ServiceHandler {
+    @Inject()
+    private greeterService!: GreeterService;
+
     @Func("hello")
     public async hello(@Req() req: any, @Param("name") name: string, @Jwt() jwt: string): Promise<string> {
         console.log(req);
-        return "Hello, " + name;
+        return this.greeterService.greet(name);
     }
 
     @Action("greeter")
