@@ -124,7 +124,7 @@ export default class ActionMetadata {
      * @returns
      * @memberof ActionMetadata
      */
-    public async exec(srv: any, req: any): Promise<any> {
+    public exec(srv: any, req: any): any {
         let result;
 
         const handlerInstance = this.handlerMetadata.instance;
@@ -132,7 +132,7 @@ export default class ActionMetadata {
 
         if (this.reject) {
             try {
-                result = await handlerInstance[this.method].apply(handlerInstance, params);
+                result = handlerInstance[this.method].apply(handlerInstance, params);
             } catch (error) {
                 if (this.reject.appendErrorMessage) {
                     req.reject(this.reject.code, `${this.reject.message}: ${error.message}`);
@@ -143,7 +143,7 @@ export default class ActionMetadata {
                 return;
             }
         } else {
-            result = await handlerInstance[this.method].apply(handlerInstance, params);
+            result = handlerInstance[this.method].apply(handlerInstance, params);
         }
 
         return result;
