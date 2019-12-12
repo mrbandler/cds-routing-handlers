@@ -132,7 +132,7 @@ export default class ActionMetadata {
 
         if (this.reject) {
             try {
-                result = handlerInstance[this.method].apply(handlerInstance, params);
+                result = await handlerInstance[this.method].apply(handlerInstance, params);
             } catch (error) {
                 if (this.reject.appendErrorMessage) {
                     req.reject(this.reject.code, `${this.reject.message}: ${error.message}`);
@@ -143,7 +143,7 @@ export default class ActionMetadata {
                 return;
             }
         } else {
-            result = handlerInstance[this.method].apply(handlerInstance, params);
+            result = await handlerInstance[this.method].apply(handlerInstance, params);
         }
 
         return result;
