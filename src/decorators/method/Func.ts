@@ -1,4 +1,4 @@
-import { getMetadataArgsStorage } from "../../index";
+import { getCDSMetadataArgsStorage } from "../../index";
 import { HandlerType } from "../../types/HandlerType";
 import { OperationType } from "../../types/OperationType";
 
@@ -11,7 +11,7 @@ import { OperationType } from "../../types/OperationType";
  */
 export function Func(name: string): MethodDecorator {
     return (target: Object, key: string | symbol, descriptor: PropertyDescriptor) => {
-        getMetadataArgsStorage().addActionMetadata({
+        getCDSMetadataArgsStorage().addActionMetadata({
             target: target.constructor,
             method: key as string,
             handler: HandlerType.On,

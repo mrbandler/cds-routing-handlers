@@ -15,7 +15,7 @@ export class ServiceHandler {
     @Func("hello")
     public async hello(@Req() req: any, @Param("name") name: string, @Jwt() jwt: string): Promise<string> {
         console.log(req);
-        return this.greeterService.greet(name);
+        return await this.greeterService.greet(name);
     }
 
     @Action("greeter")

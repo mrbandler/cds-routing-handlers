@@ -124,7 +124,7 @@ export default class ActionMetadata {
      * @returns
      * @memberof ActionMetadata
      */
-    public async exec(srv: any, req: any): Promise<any> {
+    public exec(srv: any, req: any): any {
         let result;
 
         const handlerInstance = this.handlerMetadata.instance;
