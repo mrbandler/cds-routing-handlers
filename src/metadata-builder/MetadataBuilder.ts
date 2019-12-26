@@ -1,4 +1,4 @@
-import { getMetadataArgsStorage } from "../index";
+import { getCDSMetadataArgsStorage } from "../index";
 import HandlerMetadata from "../metadata/HandlerMetadata";
 import ActionMetadata from "../metadata/ActionMetadata";
 import RejectMetadata from "../metadata/RejectMetadata";
@@ -31,8 +31,8 @@ export default class MetadataBuilder {
      */
     private createHandler(classes?: Function[]): HandlerMetadata[] {
         const handlers = !classes
-            ? getMetadataArgsStorage().handlerMetadata
-            : getMetadataArgsStorage().filterHandlerMetadataForClasses(classes);
+            ? getCDSMetadataArgsStorage().handlerMetadata
+            : getCDSMetadataArgsStorage().filterHandlerMetadataForClasses(classes);
 
         return handlers.map(handlerArgs => {
             const handler = new HandlerMetadata(handlerArgs);
@@ -50,7 +50,7 @@ export default class MetadataBuilder {
      * @memberof MetadataBuilder
      */
     private createActions(handler: HandlerMetadata): ActionMetadata[] {
-        return getMetadataArgsStorage()
+        return getCDSMetadataArgsStorage()
             .filterActionsWithTarget(handler.target)
             .map(actionArgs => {
                 const action = new ActionMetadata(handler, actionArgs);
@@ -73,7 +73,7 @@ export default class MetadataBuilder {
     private createReject(action: ActionMetadata): RejectMetadata | undefined {
         let result;
 
-        const args = getMetadataArgsStorage().filterRejectWithTargetAndMethod(action.target, action.method);
+        const args = getCDSMetadataArgsStorage().filterRejectWithTargetAndMethod(action.target, action.method);
         if (args) {
             result = new RejectMetadata(args);
         }
@@ -90,7 +90,7 @@ export default class MetadataBuilder {
      * @memberof MetadataBuilder
      */
     private createParams(action: ActionMetadata): ParamMetadata[] {
-        return getMetadataArgsStorage()
+        return getCDSMetadataArgsStorage()
             .filterParamsWithTargetAndMethod(action.target, action.method)
             .map(paramArgs => new ParamMetadata(action, paramArgs));
     }
