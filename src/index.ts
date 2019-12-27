@@ -23,7 +23,7 @@ export * from "./decorators/param/Jwt";
  * @export
  * @returns {MetadataArgsStorage} Metadata arguments storage.
  */
-export function getCDSMetadataArgsStorage(): MetadataArgsStorage {
+export function getMetadataArgsStorage(): MetadataArgsStorage {
     if (!(global as any).cdsHandlersMetadataArgsStorage)
         (global as any).cdsHandlersMetadataArgsStorage = new MetadataArgsStorage();
 

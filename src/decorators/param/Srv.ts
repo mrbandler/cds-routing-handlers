@@ -1,4 +1,4 @@
-import { getCDSMetadataArgsStorage } from "../../index";
+import { getMetadataArgsStorage } from "../../index";
 import { ParamType } from "../../types/ParamType";
 
 /**
@@ -9,7 +9,7 @@ import { ParamType } from "../../types/ParamType";
  */
 export function Srv(): ParameterDecorator {
     return (target: Object, key: string | symbol, index: number) => {
-        getCDSMetadataArgsStorage().addParamMetadata({
+        getMetadataArgsStorage().addParamMetadata({
             object: target,
             method: key as string,
             index: index,

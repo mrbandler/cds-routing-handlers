@@ -1,4 +1,4 @@
-import { getCDSMetadataArgsStorage } from "../../index";
+import { getMetadataArgsStorage } from "../../index";
 import { OperationType } from "../../types/OperationType";
 import { HandlerType } from "../../types/HandlerType";
 
@@ -10,7 +10,7 @@ import { HandlerType } from "../../types/HandlerType";
  */
 export function BeforeDelete(): MethodDecorator {
     return (target: Object, key: string | symbol, descriptor: PropertyDescriptor) => {
-        getCDSMetadataArgsStorage().addActionMetadata({
+        getMetadataArgsStorage().addActionMetadata({
             target: target.constructor,
             method: key as string,
             handler: HandlerType.Before,
@@ -27,7 +27,7 @@ export function BeforeDelete(): MethodDecorator {
  */
 export function OnDelete(): MethodDecorator {
     return (target: Object, key: string | symbol, descriptor: PropertyDescriptor) => {
-        getCDSMetadataArgsStorage().addActionMetadata({
+        getMetadataArgsStorage().addActionMetadata({
             target: target.constructor,
             method: key as string,
             handler: HandlerType.On,
@@ -44,7 +44,7 @@ export function OnDelete(): MethodDecorator {
  */
 export function AfterDelete(): MethodDecorator {
     return (target: Object, key: string | symbol, descriptor: PropertyDescriptor) => {
-        getCDSMetadataArgsStorage().addActionMetadata({
+        getMetadataArgsStorage().addActionMetadata({
             target: target.constructor,
             method: key as string,
             handler: HandlerType.After,
