@@ -1,4 +1,4 @@
-import { getCDSMetadataArgsStorage } from "../../index";
+import { getMetadataArgsStorage } from "../../index";
 
 /**
  * Reject handler decorator.
@@ -10,7 +10,7 @@ import { getCDSMetadataArgsStorage } from "../../index";
  */
 export function OnReject(code: number, message: string, appendErrorMessage: boolean = false): MethodDecorator {
     return (target: Object, key: string | symbol, descriptor: PropertyDescriptor) => {
-        getCDSMetadataArgsStorage().addRejectMetadata({
+        getMetadataArgsStorage().addRejectMetadata({
             target: target.constructor,
             method: key as string,
             code: code,

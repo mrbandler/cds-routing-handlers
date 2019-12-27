@@ -1,4 +1,4 @@
-import { getCDSMetadataArgsStorage } from "../../index";
+import { getMetadataArgsStorage } from "../../index";
 
 /**
  * Handler decorator.
@@ -9,6 +9,6 @@ import { getCDSMetadataArgsStorage } from "../../index";
  */
 export function Handler(entity?: string): ClassDecorator {
     return (target: Function) => {
-        getCDSMetadataArgsStorage().addHandlerMetadata({ target, entity });
+        getMetadataArgsStorage().addHandlerMetadata({ target, entity });
     };
 }
