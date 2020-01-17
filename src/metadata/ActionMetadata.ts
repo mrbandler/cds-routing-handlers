@@ -124,11 +124,11 @@ export default class ActionMetadata {
      * @returns
      * @memberof ActionMetadata
      */
-    public exec(srv: any, req: any): any {
+    public exec(srv: any, req: any, e?: any[] | any): any {
         let result;
 
         const handlerInstance = this.handlerMetadata.instance;
-        const params = this.buildParams(srv, req);
+        const params = this.buildParams(srv, req, e);
 
         if (this.reject) {
             try {
@@ -159,7 +159,7 @@ export default class ActionMetadata {
      * @returns {any[]}
      * @memberof ActionMetadata
      */
-    private buildParams(srv: any, req: any): any[] {
+    private buildParams(srv: any, req: any, e?: any[] | any): any[] {
         const sortedParams = this.params.sort((a, b) => {
             if (a.index > b.index) return 1;
             if (b.index > a.index) return -1;
@@ -179,6 +179,8 @@ export default class ActionMetadata {
                     return this.buildParam(param, req);
                 case ParamType.Jwt:
                     return this.retrieveJwt(req);
+                case ParamType.Entities:
+                    return e;
             }
         });
     }

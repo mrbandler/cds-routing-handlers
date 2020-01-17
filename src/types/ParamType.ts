@@ -10,4 +10,5 @@ export enum ParamType {
     ParamObj,
     Param,
     Jwt,
+    Entities,
 }
