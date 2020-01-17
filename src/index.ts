@@ -16,6 +16,7 @@ export * from "./decorators/param/Req";
 export * from "./decorators/param/ParamObj";
 export * from "./decorators/param/Param";
 export * from "./decorators/param/Jwt";
+export * from "./decorators/param/Entities";
 
 /**
  * Returns the metadata arguments storage.

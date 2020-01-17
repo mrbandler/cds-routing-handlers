@@ -87,8 +87,8 @@ export default class CDSHandler {
      */
     private static registerAfterHandler(srv: any, action: ActionMetadata): void {
         if (action.entity !== undefined) {
-            srv.after(action.operation, action.entity, async (req: any) => {
-                return await action.exec(srv, req);
+            srv.after(action.operation, action.entity, async (entities: any[], req: any) => {
+                return await action.exec(srv, req, entities);
             });
         }
     }
