@@ -8,9 +8,10 @@
 
 1. [Installation](#1-installation) 💻
 2. [Usage](#2-usage) ⌨️
-3. [Example](#3-example)
-4. [Bugs and Features](#4-bugs-and-features) 🐞💡
-5. [License](#5-license) 📃
+3. [Decorator Reference](#3-decorator-reference) 📋
+4. [Example](#4-example) 🧷
+5. [Bugs and Features](#5-bugs-and-features) 🐞💡
+6. [License](#6-license) 📃
 
 ## 1. Installation
 
@@ -326,28 +327,82 @@ export class ParamExampleHandler {
     }
 
     /**
-     * Finally if the incoming request contains a JWT token you can inject that aswell.
+     * If the incoming request contains a JWT token you can inject that aswell.
      */
     @OnRead()
     public async read(@Jwt() jwt: string): Promise<string> {
         // Do something with srv and req.
     }
+
+    /**
+     * After handlers a bit if a special case, they always give you a array of entities that was worked on prior to the after handler.
+     *
+     * This list can be injected via the @Entities decorator.
+     */
+    @AfterRead()
+    public async afterRead(@Entities() entities: IDoItParams[]): Promise<IDoItParams[]> {
+        return entities.map(e => {
+            e.id = "After handler was here";
+            return e;
+        });
+    }
 }
 ```
 
-## 5. Example
+## 3. Decorator Reference
+
+### Handler Decorators
+
+| Signature                   | Example                                | Description                                                                                                                                                                                                                          |
+| --------------------------- | -------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `@Handler(entity?: string)` | `@Handler("Books") class BooksHandler` | Class that is marked with this decorator is registered as a handler and its annotated methods are registered as actions. The entity paramter is used to differentiate and register the correct actions for the corresponding entity. |
+
+### Handler Action Decorators
+
+In this table we assume that all action handlers a within a `@Handler` decorated class with the entity `Books`.
+
+| Signature                                                                       | Example                                                    | Description                                                                                                                                                       | @sap/cds analogue                                                                           |
+| ------------------------------------------------------------------------------- | ---------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- | :------------------------------------------------------------------------------------------ |
+| `@BeforeCreate()`                                                               | `@BeforeCreate() async beforeCreate()`                     | Methods marked with this decorator will register a request made with POST HTTP Method to the specified entity, before it will be handled by the actual handler.   | `srv.before("CREATE", "Books", async (req) => ...)`                                         |
+| `@OnCreate()`                                                                   | `@OnCreate() async onCreate()`                             | Methods marked with this decorator will register a request made with POST HTTP Method to the specified entity.                                                    | `srv.on("CREATE", "Books", async (req) => ...)`                                             |
+| `@AfterCreate()`                                                                | `@AfterCreate() async afterCreate()`                       | Methods marked with this decorator will register a request made with POST HTTP Method to the specified entity, after it was handled by the actual handler.        | `srv.after("CREATE", "Books", async (books, req) => ...)`                                   |
+| `@BeforeRead()`                                                                 | `@BeforeRead() async beforeRead()`                         | Methods marked with this decorator will register a request made with GET HTTP Method to the specified entity, before it will be handled by the actual handler.    | `srv.before("READ", "Books", async (req) => ...)`                                           |
+| `@OnRead()`                                                                     | `@OnRead() async onRead()`                                 | Methods marked with this decorator will register a request made with GET HTTP Method to the specified entity.                                                     | `srv.on("READ", "Books", async (req) => ...)`                                               |
+| `@AfterRead()`                                                                  | `@AfterRead() async afterRead()`                           | Methods marked with this decorator will register a request made with GET HTTP Method to the specified entity, after it was handled by the actual handler.         | `srv.after("READ", "Books", async (books, req) => ...)`                                     |
+| `@BeforeUpdate()`                                                               | `@BeforeUpdate() async beforeUpdate()`                     | Methods marked with this decorator will register a request made with PUT HTTP Method to the specified entity, before it will be handled by the actual handler.    | `srv.before("UPDATE", "Books", async (req) => ...)`                                         |
+| `@OnUpdate()`                                                                   | `@OnUpdate() async onUpdate()`                             | Methods marked with this decorator will register a request made with PUT HTTP Method to the specified entity.                                                     | `srv.on("UPDATE", "Books", async (req) => ...)`                                             |
+| `@AfterUpdate()`                                                                | `@AfterUpdate() async afterUpdate()`                       | Methods marked with this decorator will register a request made with DELETE HTTP Method to the specified entity, after it was handled by the actual handler.      | `srv.after("UPDATE", "Books", async (books, req) => ...)`                                   |
+| `@BeforeDelete()`                                                               | `@BeforeDelete() async beforeDelete()`                     | Methods marked with this decorator will register a request made with DELETE HTTP Method to the specified entity, before it will be handled by the actual handler. | `srv.before("DELETE", "Books", async (req) => ...)`                                         |
+| `@OnDelete()`                                                                   | `@OnDelete() async onDelete()`                             | Methods marked with this decorator will register a request made with DELETE HTTP Method to the specified entity.                                                  | `srv.on("DELETE", "Books", async (req) => ...)`                                             |
+| `@AfterDelete()`                                                                | `@AfterDelete() async afterDelete()`                       | Methods marked with this decorator will register a request made with DELETE HTTP Method to the specified entity, after it was handled by the actual handler.      | `srv.after("DELETE", "Books", async (books, req) => ...)`                                   |
+| `@Func(name: string)`                                                           | `@Func("doIt") async doIt()`                               | Methods marked with this decorator will register a request made with either GET or POST HTTP. The payload can either be given by path parameters or body.         | `srv.on("doIt", "Books", async (req) => ...)` OR `srv.on("doIt", async (req) => ...)`       |
+| `@Action(name: string)`                                                         | `@Action("doItNow") async doItNow()`                       | Methods marked with this decorator will register a request made with either GET or POST HTTP. The payload can either be given by path parameters or body.         | `srv.on("doItNow", "Books", async (req) => ...)` OR `srv.on("doItNow", async (req) => ...)` |
+| `@OnReject(code: number, message: string, appendErrorMessage: boolean = false)` | `@OnReject(500, "Nope, that didn't work") async handler()` | Methods marked with this decorator will return a error object when a handler fails.                                                                               | `srv.on("READ", "Books", async (req) => {req.reject(500, "Nope, that didn't work")})`       |
+
+### Method Parameter Decorators
+
+| Signature              | Example                                     | Description                                                     | express.js analogue                                                                     |
+| ---------------------- | ------------------------------------------- | --------------------------------------------------------------- | --------------------------------------------------------------------------------------- |
+| `@Req()`               | `onRead(@Req() req: any)`                   | Injects the request object.                                     | `srv.on("READ", "Books", async (req) => ...)`                                           |
+| `@Srv()`               | `onRead(@Srv() srv: any)`                   | Injects the service object.                                     | `srv.on("READ", "Books", async (req) => { // Acess srv here })`                         |
+| `@Param(name: string)` | `doIt(@Param("times") times: number)`       | Injects a Function/Action Import parameter.                     | `srv.on("READ", "Books", async (req) => { let times = req.data["times"] as number; })`  |
+| `@ParamObj()`          | `doIt(@ParamObj() doItParams: IDoItParams)` | Injects a Function/Action Import parameter object.              | `srv.on("READ", "Books", async (req) => { let doItParams = req.data as IDoItParams; })` |
+| `@Entities()`          | `afterRead(@Entities() entities: IBook[])`  | Injects entities from a previous handler on `@After*` handlers. | `srv.after("READ", "Books", async (books, req) => ...)`                                 |
+| `@Jwt()`               | `onRead(@Jwt() jwt: string)`                | Injects the JWT token, when found on incoming request.          | `N/A`                                                                                   |
+
+## 4. Example
 
 For a complete example checkout the `./test` directory which contains the project I am testing with.
 
 Additionally you can use my cds-routing-handler [Postman](https://www.getpostman.com/) collection which contains definitions for every endpoint from the project.
 
-## 4. Bugs and Features
+## 5. Bugs and Features
 
 Please open a issue when you encounter any bugs 🐞 or if you have an idea for a additional feature 💡.
 
 ---
 
-## 5. License
+## 6. License
 
 MIT License
 
