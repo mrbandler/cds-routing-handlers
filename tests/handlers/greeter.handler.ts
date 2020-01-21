@@ -1,4 +1,4 @@
-import { Handler, Req, OnRead, OnReject, AfterRead, Entities } from "../../lib";
+import { Handler, Req, OnRead, OnReject, AfterRead, Entities, Next, Data } from "../../lib";
 
 interface IData {
     Id: string;
@@ -6,11 +6,14 @@ interface IData {
     Message: string;
 }
 
-@Handler("Greeter")
+@Handler("Greeters")
 export class GreeterHandler {
     @OnRead()
     @OnReject(500, "Nope", true)
-    public async read(@Req() req: any): Promise<IData[]> {
+    public async read(@Req() req: any, @Next() next: Function, @Data() data: IData): Promise<IData[]> {
+        console.log(next);
+        console.log(data);
+
         return [
             {
                 Id: "8HEXDIG-4HEXDIG-4HEXDIG-4HEXDIG-12HEXDIG",

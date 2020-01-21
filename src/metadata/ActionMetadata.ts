@@ -124,11 +124,11 @@ export default class ActionMetadata {
      * @returns
      * @memberof ActionMetadata
      */
-    public exec(srv: any, req: any, e?: any[] | any): any {
+    public exec(srv: any, req: any, next: Function | undefined, e?: any[] | any): any {
         let result;
 
         const handlerInstance = this.handlerMetadata.instance;
-        const params = this.buildParams(srv, req, e);
+        const params = this.buildParams(srv, req, next, e);
 
         if (this.reject) {
             try {
@@ -153,13 +153,13 @@ export default class ActionMetadata {
      * Builds a paramters list out if all defined paramter decorators.
      *
      * @private
-     * @param {*} srv
-     * @param {*} req
-     * @param {*} next
+     * @param {*} srv CDS Service
+     * @param {*} req Incoming CDS request
+     * @param {*} next Next function that calls the next handler.
      * @returns {any[]}
      * @memberof ActionMetadata
      */
-    private buildParams(srv: any, req: any, e?: any[] | any): any[] {
+    private buildParams(srv: any, req: any, next: Function | undefined, e?: any[] | any): any[] {
         const sortedParams = this.params.sort((a, b) => {
             if (a.index > b.index) return 1;
             if (b.index > a.index) return -1;
@@ -173,6 +173,8 @@ export default class ActionMetadata {
                     return srv;
                 case ParamType.Req:
                     return req;
+                case ParamType.Data:
+                    return req.data;
                 case ParamType.ParamObj:
                     return req.data;
                 case ParamType.Param:
@@ -181,6 +183,8 @@ export default class ActionMetadata {
                     return this.retrieveJwt(req);
                 case ParamType.Entities:
                     return e;
+                case ParamType.Next:
+                    return next;
             }
         });
     }
@@ -204,6 +208,14 @@ export default class ActionMetadata {
         return result;
     }
 
+    /**
+     * Retrieves the JWT token from a given request object.
+     *
+     * @private
+     * @param {*} req Request object to read the JWT token from
+     * @returns {(string | undefined)} JWT token
+     * @memberof ActionMetadata
+     */
     private retrieveJwt(req: any): string | undefined {
         return cloud.retrieveJwt(req._.req);
     }
