@@ -1,4 +1,3 @@
-import * as cloud from "@sap/cloud-sdk-core";
 import IActionMetadataArgs from "./args/IActionMetadataArgs";
 import IRejectMetadataArgs from "./args/IRejectMetadataArgs";
 import HandlerMetadata from "./HandlerMetadata";
@@ -180,7 +179,7 @@ export default class ActionMetadata {
                 case ParamType.Param:
                     return this.buildParam(param, req);
                 case ParamType.Jwt:
-                    return this.retrieveJwt(req);
+                    return req.attr.token || "";
                 case ParamType.Entities:
                     return e;
                 case ParamType.Next:
@@ -206,17 +205,5 @@ export default class ActionMetadata {
         }
 
         return result;
-    }
-
-    /**
-     * Retrieves the JWT token from a given request object.
-     *
-     * @private
-     * @param {*} req Request object to read the JWT token from
-     * @returns {(string | undefined)} JWT token
-     * @memberof ActionMetadata
-     */
-    private retrieveJwt(req: any): string | undefined {
-        return cloud.retrieveJwt(req._.req);
     }
 }
