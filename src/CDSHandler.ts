@@ -1,7 +1,8 @@
 import MetadataBuilder from "./metadata-builder/MetadataBuilder";
+import ActionMetadata from "./metadata/ActionMetadata";
 import { HandlerType } from "./types/HandlerType";
 import { OperationType } from "./types/OperationType";
-import ActionMetadata from "./metadata/ActionMetadata";
+import { IExecContext } from "./types/IExecContext";
 
 /**
  * CDS Handler.
@@ -61,7 +62,8 @@ export default class CDSHandler {
     private static registerBeforeHandler(srv: any, action: ActionMetadata): void {
         if (action.entity !== undefined) {
             srv.before(action.operation, action.entity, async (req: any, next: Function) => {
-                return await action.exec(srv, req, next);
+                const context = this.createExecutionContext(srv, req, next);
+                return await action.exec(context);
             });
         }
     }
@@ -78,7 +80,8 @@ export default class CDSHandler {
     private static registerOnHandler(srv: any, action: ActionMetadata): void {
         if (action.entity !== undefined) {
             srv.on(action.operation, action.entity, async (req: any, next: Function) => {
-                return await action.exec(srv, req, next);
+                const context = this.createExecutionContext(srv, req, next);
+                return await action.exec(context);
             });
         }
     }
@@ -95,7 +98,8 @@ export default class CDSHandler {
     private static registerAfterHandler(srv: any, action: ActionMetadata): void {
         if (action.entity !== undefined) {
             srv.after(action.operation, action.entity, async (entities: any[], req: any) => {
-                return await action.exec(srv, req, undefined, entities);
+                const context = this.createExecutionContext(srv, req, undefined, entities);
+                return await action.exec(context);
             });
         }
     }
@@ -112,12 +116,40 @@ export default class CDSHandler {
     private static registerFunctionImportHandler(srv: any, action: ActionMetadata): void {
         if (action.entity === undefined) {
             srv.on(action.functionImportName, async (req: any, next: Function) => {
-                return await action.exec(srv, req, next);
+                const context = this.createExecutionContext(srv, req, next);
+                return await action.exec(context);
             });
         } else {
             srv.on(action.functionImportName, action.entity, async (req: any, next: Function) => {
-                return await action.exec(srv, req, next);
+                const context = this.createExecutionContext(srv, req, next);
+                return await action.exec(context);
             });
         }
+    }
+
+    /**
+     * Creates a execution context.
+     *
+     * @private
+     * @static
+     * @param {*} srv CDS service
+     * @param {*} req Incoming CDS request
+     * @param {(Function | undefined)} next Next handler function
+     * @param {(any[] | any)} [e] Entities on a after handler
+     * @returns {IExecContext}
+     * @memberof CDSHandler
+     */
+    private static createExecutionContext(
+        srv: any,
+        req: any,
+        next: Function | undefined,
+        e?: any[] | any
+    ): IExecContext {
+        return {
+            srv: srv,
+            req: req,
+            next: next,
+            e: e,
+        };
     }
 }

@@ -15,7 +15,11 @@
         "controller",
         "handler",
         "cds",
-        "sap"
+        "sap",
+        "cap",
+        "cloud",
+        "application",
+        "programming"
     ],
     "files": [
         "lib"
