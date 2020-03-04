@@ -2,7 +2,6 @@ import IHandlerMetadataArgs from "../metadata/args/IHandlerMetadataArgs";
 import IActionMetadataArgs from "../metadata/args/IActionMetadataArgs";
 import IRejectMetadataArgs from "../metadata/args/IRejectMetadataArgs";
 import IParamMetadataArgs from "../metadata/args/IParamMetadataArgs";
-import IMiddlewareMetadataArgs from "../metadata/args/IMiddlewareMetadataArgs";
 import { IUseMetadataArgs } from "../metadata/args/IUseMetadataArgs";
 
 /**
@@ -21,14 +20,14 @@ export class MetadataArgsStorage {
      */
     private handler: IHandlerMetadataArgs[] = [];
 
-    /**
-     * Middleware metadata arguments.
-     *
-     * @private
-     * @type {IMiddlewareMetadataArgs[]}
-     * @memberof MetadataArgsStorage
-     */
-    private middlewares: IMiddlewareMetadataArgs[] = [];
+    // /**
+    //  * Middleware metadata arguments.
+    //  *
+    //  * @private
+    //  * @type {IMiddlewareMetadataArgs[]}
+    //  * @memberof MetadataArgsStorage
+    //  */
+    // private middlewares: IMiddlewareMetadataArgs[] = [];
 
     /**
      * Registerd middleware usage metadata args.
@@ -77,16 +76,16 @@ export class MetadataArgsStorage {
         return this.handler;
     }
 
-    /**
-     * Middleware metadata.
-     *
-     * @readonly
-     * @type {IMiddlewareMetadataArgs[]}
-     * @memberof MetadataArgsStorage
-     */
-    get middlewareMetadata(): IMiddlewareMetadataArgs[] {
-        return this.middlewares;
-    }
+    // /**
+    //  * Middleware metadata.
+    //  *
+    //  * @readonly
+    //  * @type {IMiddlewareMetadataArgs[]}
+    //  * @memberof MetadataArgsStorage
+    //  */
+    // get middlewareMetadata(): IMiddlewareMetadataArgs[] {
+    //     return this.middlewares;
+    // }
 
     /**
      * Adds handler metadata.
@@ -98,15 +97,15 @@ export class MetadataArgsStorage {
         this.handler.push(metadata);
     }
 
-    /**
-     * Adds a middleware metadata.
-     *
-     * @param {IMiddlewareMetadataArgs} metadata Metadata arguments
-     * @memberof MetadataArgsStorage
-     */
-    public addMiddlewareMetadata(metadata: IMiddlewareMetadataArgs): void {
-        this.middlewares.push(metadata);
-    }
+    // /**
+    //  * Adds a middleware metadata.
+    //  *
+    //  * @param {IMiddlewareMetadataArgs} metadata Metadata arguments
+    //  * @memberof MetadataArgsStorage
+    //  */
+    // public addMiddlewareMetadata(metadata: IMiddlewareMetadataArgs): void {
+    //     this.middlewares.push(metadata);
+    // }
 
     /**
      * Adds a middleware usage metadata.
@@ -165,17 +164,17 @@ export class MetadataArgsStorage {
         });
     }
 
-    /**
-     * Filters middleware metadata for given classes.
-     *
-     * @param {Function} classes Middleware classes.
-     * @returns {IMiddlewareMetadataArgs[]} Filtered middleware metadata.
-     * @memberof MetadataArgsStorage
-     */
-    public filterMiddlewareMetadataForClasses(classes: Function[]): IMiddlewareMetadataArgs[] {
-        const middlewares = classes.map(cls => this.middlewares.find(mid => mid.target === cls));
-        return middlewares.filter(midd => midd !== undefined) as IMiddlewareMetadataArgs[];
-    }
+    // /**
+    //  * Filters middleware metadata for given classes.
+    //  *
+    //  * @param {Function} classes Middleware classes.
+    //  * @returns {IMiddlewareMetadataArgs[]} Filtered middleware metadata.
+    //  * @memberof MetadataArgsStorage
+    //  */
+    // public filterMiddlewareMetadataForClasses(classes: Function[]): IMiddlewareMetadataArgs[] {
+    //     const middlewares = classes.map(cls => this.middlewares.find(mid => mid.target === cls));
+    //     return middlewares.filter(midd => midd !== undefined) as IMiddlewareMetadataArgs[];
+    // }
 
     /**
      * Filters registerd middleware usages for a given target class and/or method name.
@@ -240,7 +239,7 @@ export class MetadataArgsStorage {
      */
     public reset(): void {
         this.handler = [];
-        this.middlewares = [];
+        // this.middlewares = [];
         this.uses = [];
         this.actions = [];
         this.rejects = [];

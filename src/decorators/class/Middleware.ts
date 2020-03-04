@@ -8,6 +8,6 @@ import { getMetadataArgsStorage } from "../../index";
  */
 export function Middleware(): ClassDecorator {
     return (target: Function) => {
-        getMetadataArgsStorage().addMiddlewareMetadata({ target });
+        // getMetadataArgsStorage().addMiddlewareMetadata({ target });
     };
 }

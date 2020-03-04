@@ -1,9 +1,8 @@
 import { getMetadataArgsStorage } from "../index";
-import MiddlewareMetadata from "../metadata/HandlerMetadata";
 import ActionMetadata from "../metadata/ActionMetadata";
 import RejectMetadata from "../metadata/RejectMetadata";
 import ParamMetadata from "../metadata/ParamMetadata";
-import { MiddlewareMetadata } from "../metadata/MiddlewareMetadata";
+import HandlerMetadata from "../metadata/HandlerMetadata";
 
 /**
  * Metadata builder.
@@ -19,20 +18,20 @@ export default class MetadataBuilder {
      * @returns {MiddlewareMetadata[]} Build handler metadata.
      * @memberof MetadataBuilder
      */
-    public buildHandlerMetadata(classes?: Function[]): MiddlewareMetadata[] {
+    public buildHandlerMetadata(classes?: Function[]): HandlerMetadata[] {
         return this.createHandler(classes);
     }
 
-    /**
-     * Builds middleware metadata for a given set of middleware classes.
-     *
-     * @param {Function[]} [classes] Middleware classes
-     * @returns {MiddlewareMetadata[]} Buiild middleware metadata
-     * @memberof MetadataBuilder
-     */
-    public buildMiddlewareMetadata(classes?: Function[]): MiddlewareMetadata[] {
-        return this.create;
-    }
+    // /**
+    //  * Builds middleware metadata for a given set of middleware classes.
+    //  *
+    //  * @param {Function[]} [classes] Middleware classes
+    //  * @returns {MiddlewareMetadata[]} Buiild middleware metadata
+    //  * @memberof MetadataBuilder
+    //  */
+    // public buildMiddlewareMetadata(classes?: Function[]): MiddlewareMetadata[] {
+    //     return this.create;
+    // }
 
     /**
      * Create handler metadata.
@@ -41,31 +40,31 @@ export default class MetadataBuilder {
      * @returns {MiddlewareMetadata[]} Created handler metadata.
      * @memberof MetadataBuilder
      */
-    private createHandler(classes?: Function[]): MiddlewareMetadata[] {
+    private createHandler(classes?: Function[]): HandlerMetadata[] {
         const handlers = !classes
             ? getMetadataArgsStorage().handlerMetadata
             : getMetadataArgsStorage().filterHandlerMetadataForClasses(classes);
 
         return handlers.map(handlerArgs => {
-            const handler = new MiddlewareMetadata(handlerArgs);
+            const handler = new HandlerMetadata(handlerArgs);
             handler.actions = this.createActions(handler);
 
             return handler;
         });
     }
 
-    private createMiddleware(classes?: Function[]): MiddlewareMetadata[] {
-        const middlewares = !classes
-            ? getMetadataArgsStorage().middlewareMetadata
-            : getMetadataArgsStorage().filterMiddlewareMetadataForClasses(classes);
+    // private createMiddleware(classes?: Function[]): MiddlewareMetadata[] {
+    //     const middlewares = !classes
+    //         ? getMetadataArgsStorage().middlewareMetadata
+    //         : getMetadataArgsStorage().filterMiddlewareMetadataForClasses(classes);
 
-        return middlewares.map(middlewareArgs => {
-            const middleware = new MiddlewareMetadata(middlewareArgs);
-            middleware.params = this.createMiddlewareParams(middleware);
+    //     return middlewares.map(middlewareArgs => {
+    //         const middleware = new MiddlewareMetadata(middlewareArgs);
+    //         middleware.params = this.createMiddlewareParams(middleware);
 
-            return middleware;
-        });
-    }
+    //         return middleware;
+    //     });
+    // }
 
     /**
      * Creates action metadata.
@@ -74,7 +73,7 @@ export default class MetadataBuilder {
      * @returns {ActionMetadata[]} Created action metadata.
      * @memberof MetadataBuilder
      */
-    private createActions(handler: MiddlewareMetadata): ActionMetadata[] {
+    private createActions(handler: HandlerMetadata): ActionMetadata[] {
         return getMetadataArgsStorage()
             .filterActionsWithTarget(handler.target)
             .map(actionArgs => {
@@ -120,17 +119,17 @@ export default class MetadataBuilder {
             .map(paramArgs => new ParamMetadata(paramArgs));
     }
 
-    /**
-     * Creates middleware paramters.
-     *
-     * @private
-     * @param {MiddlewareMetadata} middleware Middleware to create parameters for
-     * @returns {ParamMetadata[]} Created parameters
-     * @memberof MetadataBuilder
-     */
-    private createMiddlewareParams(middleware: MiddlewareMetadata): ParamMetadata[] {
-        return getMetadataArgsStorage()
-            .filterParamsWithTargetAndMethod(middleware.target, "use")
-            .map(paramArgs => new ParamMetadata(paramArgs));
-    }
+    // /**
+    //  * Creates middleware paramters.
+    //  *
+    //  * @private
+    //  * @param {MiddlewareMetadata} middleware Middleware to create parameters for
+    //  * @returns {ParamMetadata[]} Created parameters
+    //  * @memberof MetadataBuilder
+    //  */
+    // private createMiddlewareParams(middleware: MiddlewareMetadata): ParamMetadata[] {
+    //     return getMetadataArgsStorage()
+    //         .filterParamsWithTargetAndMethod(middleware.target, "use")
+    //         .map(paramArgs => new ParamMetadata(paramArgs));
+    // }
 }
