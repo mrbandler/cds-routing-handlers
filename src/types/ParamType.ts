@@ -13,4 +13,5 @@ export enum ParamType {
     Jwt,
     Entities,
     Next,
+    Locale,
 }

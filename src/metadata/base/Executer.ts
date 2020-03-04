@@ -58,6 +58,8 @@ export abstract class Executer {
                     return context.e;
                 case ParamType.Next:
                     return context.next;
+                case ParamType.Locale:
+                    return context.req.user.locale;
             }
         });
     }
