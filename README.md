@@ -391,6 +391,7 @@ In this table we assume that all action handlers a within a `@Handler` decorated
 | `@Jwt()`               | `onRead(@Jwt() jwt: string)`                | Injects the JWT token, when found on incoming request.                                                                                                                                    | `N/A`                                                                                   |
 | `@Data()`              | `onRead(@Data() book: IBook)`               | Injects the data object from a incoming request. It's actually the same as `@ParamObj()` with a different identifier to differentiate between Function/Action imports and other handlers. | `srv.on("READ", "Books", async(req) => { const book = req.data as I Book})`             |
 | `@Next()`              | `onRead(@Next() next: Function)`            | Injects the next handler function for flow control with multiple handlers.                                                                                                                | `srv.on("READ", "Books", async(req, next) => ... )`                                     |
+| `@Locale()`            | `onRead(@Locale() locale: string)`          | Injects the locale of the current requesting user.                                                                                                                                        | `srv.on("READ", "Books", async(req) => const locale = req.user.locale)`                 |
 
 ## 4. Example
 

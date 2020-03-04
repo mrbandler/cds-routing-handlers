@@ -15,7 +15,11 @@
         "controller",
         "handler",
         "cds",
-        "sap"
+        "sap",
+        "cap",
+        "cloud",
+        "application",
+        "programming"
     ],
     "files": [
         "lib"
@@ -30,17 +34,14 @@
         "start:test": "yarn build:test && node --inspect ./srv/server.js"
     },
     "devDependencies": {
-        "@commitlint/cli": "^8.2.0",
-        "@commitlint/config-conventional": "^8.2.0",
-        "@commitlint/format": "^8.2.0",
-        "@commitlint/is-ignored": "^8.2.0",
+        "@commitlint/cli": "^8.3.5",
+        "@commitlint/config-conventional": "^8.3.4",
         "@sap/cds": "^3.20.1",
         "@sap/cds-odata-v2-adapter-proxy": "^1.4.12",
         "@types/express": "^4.17.2",
         "@types/node": "^12.12.11",
         "@typescript-eslint/eslint-plugin": "^2.11.0",
         "@typescript-eslint/parser": "^2.8.0",
-        "conventional-changelog-atom": "^2.0.3",
         "copyfiles": "^2.1.1",
         "eslint": "^6.6.0",
         "eslint-config-prettier": "^6.7.0",

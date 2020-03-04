@@ -10,14 +10,6 @@ import IParamMetadataArgs from "./args/IParamMetadataArgs";
  */
 export default class ParamMetadata {
     /**
-     * Parent action metadata.
-     *
-     * @type {ActionMetadata}
-     * @memberof ParamMetadata
-     */
-    actionMetadata: ActionMetadata;
-
-    /**
      * Class object.
      *
      * @type {*}
@@ -95,8 +87,7 @@ export default class ParamMetadata {
      * @param {IParamMetadataArgs} args Paramter arguments.
      * @memberof ParamMetadata
      */
-    constructor(actionMetadata: ActionMetadata, args: IParamMetadataArgs) {
-        this.actionMetadata = actionMetadata;
+    constructor(args: IParamMetadataArgs) {
         this.target = args.object.constructor;
         this.method = args.method;
         this.index = args.index;

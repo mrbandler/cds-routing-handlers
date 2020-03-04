@@ -5,7 +5,8 @@ import RejectMetadata from "./RejectMetadata";
 import ParamMetadata from "./ParamMetadata";
 import { HandlerType } from "../types/HandlerType";
 import { OperationType } from "../types/OperationType";
-import { ParamType } from "../types/ParamType";
+import { Executer } from "./base/Executer";
+import { IExecContext } from "../types/IExecContext";
 
 /**
  * Action metadata.
@@ -13,7 +14,7 @@ import { ParamType } from "../types/ParamType";
  * @export
  * @class ActionMetadata
  */
-export default class ActionMetadata {
+export default class ActionMetadata extends Executer {
     /**
      * Parent handler metadata.
      *
@@ -93,6 +94,8 @@ export default class ActionMetadata {
      * @memberof ActionMetadata
      */
     constructor(handlerMetadata: HandlerMetadata, args: IActionMetadataArgs) {
+        super();
+
         this.handlerMetadata = handlerMetadata;
         this.entity = handlerMetadata.entity;
         this.target = args.target;
@@ -115,93 +118,33 @@ export default class ActionMetadata {
     }
 
     /**
-     * Calls the action.
+     * Executs the action.
      *
-     * @param {*} srv CDS service.
-     * @param {*} req Incoming request.
-     * @param {*} next Next handler.
-     * @returns
+     * @protected
+     * @param {IExecContext} context Execution context
+     * @returns {*} Result
      * @memberof ActionMetadata
      */
-    public exec(srv: any, req: any, next: Function | undefined, e?: any[] | any): any {
-        let result;
+    public exec(context: IExecContext): any {
+        let result = undefined;
 
-        const handlerInstance = this.handlerMetadata.instance;
-        const params = this.buildParams(srv, req, next, e);
+        const instance = this.handlerMetadata.instance;
+        const params = this.buildParams(this.params, context);
 
         if (this.reject) {
             try {
-                result = handlerInstance[this.method].apply(handlerInstance, params);
+                result = instance[this.method].apply(instance, params);
             } catch (error) {
                 if (this.reject.appendErrorMessage) {
-                    req.reject(this.reject.code, `${this.reject.message}: ${error.message}`);
+                    context.req.reject(this.reject.code, `${this.reject.message}: ${error.message}`);
                 } else {
-                    req.reject(this.reject.code, this.reject.message);
+                    context.req.reject(this.reject.code, this.reject.message);
                 }
 
                 return;
             }
         } else {
-            result = handlerInstance[this.method].apply(handlerInstance, params);
-        }
-
-        return result;
-    }
-
-    /**
-     * Builds a paramters list out if all defined paramter decorators.
-     *
-     * @private
-     * @param {*} srv CDS Service
-     * @param {*} req Incoming CDS request
-     * @param {*} next Next function that calls the next handler.
-     * @returns {any[]}
-     * @memberof ActionMetadata
-     */
-    private buildParams(srv: any, req: any, next: Function | undefined, e?: any[] | any): any[] {
-        const sortedParams = this.params.sort((a, b) => {
-            if (a.index > b.index) return 1;
-            if (b.index > a.index) return -1;
-
-            return 0;
-        });
-
-        return sortedParams.map(param => {
-            switch (param.type) {
-                case ParamType.Srv:
-                    return srv;
-                case ParamType.Req:
-                    return req;
-                case ParamType.Data:
-                    return req.data;
-                case ParamType.ParamObj:
-                    return req.data;
-                case ParamType.Param:
-                    return this.buildParam(param, req);
-                case ParamType.Jwt:
-                    return req.attr.token || "";
-                case ParamType.Entities:
-                    return e;
-                case ParamType.Next:
-                    return next;
-            }
-        });
-    }
-
-    /**
-     * Reads a parameter from the request data object.
-     *
-     * @private
-     * @param {ParamMetadata} param Param to read from the object
-     * @param {*} req Request to read it from
-     * @returns {*}
-     * @memberof ActionMetadata
-     */
-    private buildParam(param: ParamMetadata, req: any): any {
-        let result = undefined;
-
-        if (param.name) {
-            result = req.data[param.name];
+            result = instance[this.method].apply(instance, params);
         }
 
         return result;
