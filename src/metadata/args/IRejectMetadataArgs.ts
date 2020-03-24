@@ -4,7 +4,7 @@
  * @export
  * @interface IRejectMetadataArgs
  */
-export default interface IRejectMetadataArgs {
+export interface IRejectMetadataArgs {
     /**
      * Target: JS function of the handler class method.
      *

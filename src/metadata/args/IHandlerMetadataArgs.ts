@@ -4,7 +4,7 @@
  * @export
  * @interface IHandlerMetadataArgs
  */
-export default interface IHandlerMetadataArgs {
+export interface IHandlerMetadataArgs {
     /**
      * Target: JS function for the handler class.
      *

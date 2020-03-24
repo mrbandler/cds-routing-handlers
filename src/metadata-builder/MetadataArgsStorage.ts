@@ -1,7 +1,7 @@
-import IHandlerMetadataArgs from "../metadata/args/IHandlerMetadataArgs";
-import IActionMetadataArgs from "../metadata/args/IActionMetadataArgs";
-import IRejectMetadataArgs from "../metadata/args/IRejectMetadataArgs";
-import IParamMetadataArgs from "../metadata/args/IParamMetadataArgs";
+import { IHandlerMetadataArgs } from "../metadata/args/IHandlerMetadataArgs";
+import { IActionMetadataArgs } from "../metadata/args/IActionMetadataArgs";
+import { IRejectMetadataArgs } from "../metadata/args/IRejectMetadataArgs";
+import { IParamMetadataArgs } from "../metadata/args/IParamMetadataArgs";
 import { IUseMetadataArgs } from "../metadata/args/IUseMetadataArgs";
 import { IMiddlewareMetadataArgs } from "../metadata/args/IMiddlewareMetadataArgs";
 
@@ -73,7 +73,7 @@ export class MetadataArgsStorage {
      * @type {IHandlerMetadataArgs[]}
      * @memberof MetadataArgsStorage
      */
-    get handlerMetadata(): IHandlerMetadataArgs[] {
+    public get handlerMetadata(): IHandlerMetadataArgs[] {
         return this.handler;
     }
 
@@ -84,14 +84,14 @@ export class MetadataArgsStorage {
      * @type {IMiddlewareMetadataArgs[]}
      * @memberof MetadataArgsStorage
      */
-    get middlewareMetadata(): IMiddlewareMetadataArgs[] {
+    public get middlewareMetadata(): IMiddlewareMetadataArgs[] {
         return this.middlewares;
     }
 
     /**
      * Adds handler metadata.
      *
-     * @param {IHandlerMetadataArgs} metadata Metadata arguments.
+     * @param {IHandlerMetadataArgs} metadata Metadata arguments
      * @memberof MetadataArgsStorage
      */
     public addHandlerMetadata(metadata: IHandlerMetadataArgs): void {
@@ -121,7 +121,7 @@ export class MetadataArgsStorage {
     /**
      * Adds action metadata.
      *
-     * @param {IActionMetadataArgs} metadata Metadata arguments.
+     * @param {IActionMetadataArgs} metadata Metadata arguments
      * @memberof MetadataArgsStorage
      */
     public addActionMetadata(metadata: IActionMetadataArgs): void {
@@ -131,7 +131,7 @@ export class MetadataArgsStorage {
     /**
      * Adds reject metadata.
      *
-     * @param {IRejectMetadataArgs} metadata Metadata arguements.
+     * @param {IRejectMetadataArgs} metadata Metadata arguements
      * @memberof MetadataArgsStorage
      */
     public addRejectMetadata(metadata: IRejectMetadataArgs): void {
@@ -145,7 +145,7 @@ export class MetadataArgsStorage {
     /**
      * Adds parameter metadata.
      *
-     * @param {IParamMetadataArgs} metadata Metadata arguments.
+     * @param {IParamMetadataArgs} metadata Metadata arguments
      * @memberof MetadataArgsStorage
      */
     public addParamMetadata(metadata: IParamMetadataArgs): void {
@@ -155,8 +155,8 @@ export class MetadataArgsStorage {
     /**
      * Filters handler metadata for given classes.
      *
-     * @param {Function[]} classes Handler classes.
-     * @returns {IHandlerMetadataArgs[]} Filtered handler metadata.
+     * @param {Function[]} classes Handler classes
+     * @returns {IHandlerMetadataArgs[]} Filtered handler metadata
      * @memberof MetadataArgsStorage
      */
     public filterHandlerMetadataForClasses(classes: Function[]): IHandlerMetadataArgs[] {
@@ -168,8 +168,8 @@ export class MetadataArgsStorage {
     /**
      * Filters middleware metadata for given classes.
      *
-     * @param {Function} classes Middleware classes.
-     * @returns {IMiddlewareMetadataArgs[]} Filtered middleware metadata.
+     * @param {Function} classes Middleware classes
+     * @returns {IMiddlewareMetadataArgs[]} Filtered middleware metadata
      * @memberof MetadataArgsStorage
      */
     public filterMiddlewareMetadataForClasses(classes: Function[]): IMiddlewareMetadataArgs[] {
@@ -180,8 +180,8 @@ export class MetadataArgsStorage {
     /**
      * Filters registerd middleware usages for a given middleware.
      *
-     * @param {Function} middleware Middleware to filter for.
-     * @returns {IUseMetadataArgs[]}
+     * @param {Function} middleware Middleware to filter for
+     * @returns {IUseMetadataArgs[]} Filterd usage metadata
      * @memberof MetadataArgsStorage
      */
     public filterUsesWithMiddleware(middleware: Function): IUseMetadataArgs[] {
@@ -193,8 +193,8 @@ export class MetadataArgsStorage {
     /**
      * Filters action metadata for given target.
      *
-     * @param {Function} target Target of the action.
-     * @returns {IActionMetadataArgs[]} Filtered action metadata.
+     * @param {Function} target Target of the action
+     * @returns {IActionMetadataArgs[]} Filtered action metadata
      * @memberof MetadataArgsStorage
      */
     public filterActionsWithTarget(target: Function): IActionMetadataArgs[] {

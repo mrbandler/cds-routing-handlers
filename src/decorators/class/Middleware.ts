@@ -2,10 +2,10 @@ import { getMetadataArgsStorage } from "../../index";
 import { IMiddlewareOptions } from "./options/IMiddlewareOptions";
 
 /**
- * Handler decorator.
+ * Middleware decorator.
  *
  * @export
- * @param {string} entity Entity for which the decorator is used.
+ * @param {IMiddlewareOptions} [options] Middleware options, should only be used for global middlewares
  * @returns {ClassDecorator}
  */
 export function Middleware(options?: IMiddlewareOptions): ClassDecorator {

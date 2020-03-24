@@ -2,10 +2,9 @@ import { getMetadataArgsStorage } from "../../index";
 import { ParamType } from "../../types/ParamType";
 
 /**
- * Param parameter decorator.
+ * Entities parameter decorator.
  *
  * @export
- * @param {string} name
  * @returns {ParameterDecorator}
  */
 export function Entities(): ParameterDecorator {

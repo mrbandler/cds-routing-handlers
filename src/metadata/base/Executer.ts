@@ -1,4 +1,4 @@
-import ParamMetadata from "../ParamMetadata";
+import { ParamMetadata } from "../ParamMetadata";
 import { IExecContext } from "../../types/IExecContext";
 import { ParamType } from "../../types/ParamType";
 
@@ -11,7 +11,7 @@ import { ParamType } from "../../types/ParamType";
  * @abstract
  * @class Executer
  */
-export abstract class Executer {
+export abstract class Executor {
     /**
      * Abstract exec method, to be implemented in the child class.
      *
@@ -51,7 +51,7 @@ export abstract class Executer {
                 case ParamType.ParamObj:
                     return context.req.data;
                 case ParamType.Param:
-                    return this.buildParam(param, context.req);
+                    return this.namedParam(param, context.req);
                 case ParamType.Jwt:
                     return context.req.attr.token || "";
                 case ParamType.Entities:
@@ -73,7 +73,7 @@ export abstract class Executer {
      * @returns {*} Builds parameter
      * @memberof Executer
      */
-    protected buildParam(param: ParamMetadata, req: any): any {
+    protected namedParam(param: ParamMetadata, req: any): any {
         let result = undefined;
 
         if (param.name) {

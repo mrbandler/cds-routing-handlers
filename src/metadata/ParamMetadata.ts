@@ -1,6 +1,6 @@
-import ActionMetadata from "./ActionMetadata";
 import { ParamType } from "../types/ParamType";
-import IParamMetadataArgs from "./args/IParamMetadataArgs";
+import { IParamMetadataArgs } from "./args/IParamMetadataArgs";
+import { throws } from "assert";
 
 /**
  * Parameter metadata.
@@ -8,14 +8,14 @@ import IParamMetadataArgs from "./args/IParamMetadataArgs";
  * @export
  * @class ParamMetadata
  */
-export default class ParamMetadata {
+export class ParamMetadata {
     /**
      * Class object.
      *
      * @type {*}
      * @memberof ParamMetadata
      */
-    object: any;
+    private _object: any;
 
     /**
      * Target: JS function that represents the Typescript class.
@@ -23,7 +23,7 @@ export default class ParamMetadata {
      * @type {Function}
      * @memberof ParamMetadata
      */
-    target: Function;
+    private _target: Function;
 
     /**
      * Method the parameter belongs to.
@@ -31,7 +31,7 @@ export default class ParamMetadata {
      * @type {string}
      * @memberof ParamMetadata
      */
-    method: string;
+    private _method: string;
 
     /**
      * Index of the parameter.
@@ -39,74 +39,108 @@ export default class ParamMetadata {
      * @type {number}
      * @memberof ParamMetadata
      */
-    index: number;
+    private _index: number;
 
     /**
-     *
+     * Parameter type.
      *
      * @type {ParamType}
      * @memberof ParamMetadata
      */
-    type: ParamType;
+    private _type: ParamType;
 
     /**
-     *
+     * Name of the parameter.
      *
      * @type {string}
      * @memberof ParamMetadata
      */
-    name?: string;
+    private _name?: string;
 
     /**
-     *
+     * Target type of the parameter.
      *
      * @type {*}
      * @memberof ParamMetadata
      */
-    targetType?: any;
+    private _targetType?: any;
 
     /**
-     *
+     * Name of the target class.
      *
      * @type {string}
      * @memberof ParamMetadata
      */
-    targetName: string = "";
+    private _targetName: string = "";
 
     /**
-     *
+     * Flag, whether the target is a object.
      *
      * @type {boolean}
      * @memberof ParamMetadata
      */
-    isTargetObject: boolean = false;
+    private _isTargetObject: boolean = false;
+
+    /**
+     * Parameter index.
+     *
+     * @readonly
+     * @type {number}
+     * @memberof ParamMetadata
+     */
+    public get index(): number {
+        return this._index;
+    }
+
+    /**
+     * Parameter type.
+     *
+     * @readonly
+     * @type {ParamType}
+     * @memberof ParamMetadata
+     */
+    public get type(): ParamType {
+        return this._type;
+    }
+
+    /**
+     * Name of the parameter.
+     *
+     * @readonly
+     * @type {(string | undefined)}
+     * @memberof ParamMetadata
+     */
+    public get name(): string | undefined {
+        return this._name;
+    }
 
     /**
      * Default constructor.
-     * @param {ActionMetadata} actionMetadata Action metadata.
-     * @param {IParamMetadataArgs} args Paramter arguments.
+     *
+     * @param {ActionMetadata} actionMetadata Action metadata
+     * @param {IParamMetadataArgs} args Parameter arguments
      * @memberof ParamMetadata
      */
     constructor(args: IParamMetadataArgs) {
-        this.target = args.object.constructor;
-        this.method = args.method;
-        this.index = args.index;
-        this.type = args.type;
-        this.name = args.name;
+        this._target = args.object.constructor;
+        this._method = args.method;
+        this._index = args.index;
+        this._type = args.type;
+        this._name = args.name;
 
         const paramTypes = (Reflect as any).getMetadata("design:paramtypes", args.object, args.method);
         if (paramTypes !== "undefined") {
-            this.targetType = paramTypes[args.index];
+            this._targetType = paramTypes[args.index];
         }
 
-        if (this.targetType) {
-            if (this.targetType instanceof Function && this.targetType.name) {
-                this.targetName = this.targetType.name.toLowerCase();
-            } else if (typeof this.targetType === "string") {
-                this.targetName = this.targetType.toLowerCase();
+        if (this._targetType) {
+            if (this._targetType instanceof Function && this._targetType.name) {
+                this._targetName = this._targetType.name.toLowerCase();
+            } else if (typeof this._targetType === "string") {
+                this._targetName = this._targetType.toLowerCase();
             }
 
-            this.isTargetObject = this.targetType instanceof Function || this.targetType.toLowerCase() === "object";
+            this._isTargetObject = this._targetType instanceof Function || this._targetType.toLowerCase() === "object";
         }
     }
 }

@@ -1,5 +1,5 @@
 /**
- * Metadata used to store registered middlewares.
+ * Middleware usage metadata arguments.
  *
  * @export
  * @interface IUseMetadataArgs

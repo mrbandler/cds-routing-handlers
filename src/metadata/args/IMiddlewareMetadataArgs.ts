@@ -1,15 +1,15 @@
 /**
- * Handler metadata arguments.
+ * Middleware metadata arguments.
  *
  * @export
- * @interface IHandlerMetadataArgs
+ * @interface IMiddlewareMetadataArgs
  */
 export interface IMiddlewareMetadataArgs {
     /**
      * Target: JS function for the handler class.
      *
      * @type {Function}
-     * @memberof IHandlerMetadataArgs
+     * @memberof IMiddlewareMetadataArgs
      */
     target: Function;
 

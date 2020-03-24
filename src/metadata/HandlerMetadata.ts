@@ -1,5 +1,5 @@
-import IHandlerMetadataArgs from "./args/IHandlerMetadataArgs";
-import ActionMetadata from "./ActionMetadata";
+import { IHandlerMetadataArgs } from "./args/IHandlerMetadataArgs";
+import { ActionMetadata } from "./ActionMetadata";
 import { getFromContainer } from "../container";
 
 /**
@@ -8,14 +8,14 @@ import { getFromContainer } from "../container";
  * @export
  * @class HandlerMetadata
  */
-export default class HandlerMetadata {
+export class HandlerMetadata {
     /**
      * Target: Typescript class.
      *
      * @type {Function}
      * @memberof HandlerMetadata
      */
-    target: Function;
+    private _target: Function;
 
     /**
      * Entity for which the handler is registerd.
@@ -23,7 +23,7 @@ export default class HandlerMetadata {
      * @type {string}
      * @memberof HandlerMetadata
      */
-    entity?: string;
+    private _entity?: string;
 
     /**
      * Actions metadata.
@@ -31,26 +31,58 @@ export default class HandlerMetadata {
      * @type {ActionMetadata[]}
      * @memberof HandlerMetadata
      */
-    actions: ActionMetadata[] = [];
+    private _actions: ActionMetadata[] = [];
 
     /**
-     * Default constructor.
-     * @param {IHandlerMetadataArgs} args Metadata arguments.
+     * Target: Typescript class.
+     *
+     * @readonly
+     * @type {Function}
      * @memberof HandlerMetadata
      */
-    constructor(args: IHandlerMetadataArgs) {
-        this.target = args.target;
-        this.entity = args.entity;
+    public get target(): Function {
+        return this._target;
+    }
+
+    /**
+     * Entity for which the handler is registerd.
+     *
+     * @readonly
+     * @type {(string | undefined)}
+     * @memberof HandlerMetadata
+     */
+    public get entity(): string | undefined {
+        return this._entity;
     }
 
     /**
      * Returns a instance of the handler.
      *
      * @readonly
-     * @type {*}
+     * @type {*} Instance of the handler class
      * @memberof HandlerMetadata
      */
-    get instance(): any {
+    public get instance(): any {
         return getFromContainer(this.target);
+    }
+
+    /**
+     * Actions metadata.
+     *
+     * @memberof HandlerMetadata
+     */
+    public set actions(value: ActionMetadata[]) {
+        this._actions = value;
+    }
+
+    /**
+     * Default constructor.
+     *
+     * @param {IHandlerMetadataArgs} args Metadata arguments
+     * @memberof HandlerMetadata
+     */
+    constructor(args: IHandlerMetadataArgs) {
+        this._target = args.target;
+        this._entity = args.entity;
     }
 }

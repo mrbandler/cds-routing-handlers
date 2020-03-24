@@ -1,7 +1,7 @@
-import MetadataBuilder from "./metadata-builder/MetadataBuilder";
-import ActionMetadata from "./metadata/ActionMetadata";
+import { MetadataBuilder } from "./metadata-builder/MetadataBuilder";
+import { ActionMetadata } from "./metadata/ActionMetadata";
 import { HandlerType } from "./types/HandlerType";
-import { OperationType } from "./types/OperationType";
+import { ODataOperation } from "./types/ODataOperation";
 import { IExecContext } from "./types/IExecContext";
 import { MiddlewareMetadata } from "./metadata/MiddlewareMetadata";
 
@@ -11,7 +11,7 @@ import { MiddlewareMetadata } from "./metadata/MiddlewareMetadata";
  * @export
  * @class CDSHandler
  */
-export default class CDSHandler {
+export class CDSHandler {
     /**
      * Registers all handlers and middlewares on the given service.
      *
@@ -92,8 +92,8 @@ export default class CDSHandler {
 
                         case HandlerType.On:
                             if (
-                                action.operation === OperationType.Function ||
-                                action.operation === OperationType.Action
+                                action.operation === ODataOperation.Function ||
+                                action.operation === ODataOperation.Action
                             ) {
                                 this.registerFunctionImportHandler(srv, action);
                             } else {

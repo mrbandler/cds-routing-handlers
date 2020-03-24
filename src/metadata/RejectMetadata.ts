@@ -1,19 +1,19 @@
-import IRejectMetadataArgs from "./args/IRejectMetadataArgs";
+import { IRejectMetadataArgs } from "./args/IRejectMetadataArgs";
 
 /**
- *
+ * Rejection metadata.
  *
  * @export
  * @class RejectMetadata
  */
-export default class RejectMetadata {
+export class RejectMetadata {
     /**
      * Target: JS function of the handler class method.
      *
      * @type {Function}
      * @memberof IRejectMetadataArgs
      */
-    target: Function;
+    private _target: Function;
 
     /**
      * Method name.
@@ -21,7 +21,7 @@ export default class RejectMetadata {
      * @type {string}
      * @memberof IRejectMetadataArgs
      */
-    method: string;
+    private _method: string;
 
     /**
      * HTTP Response code.
@@ -29,7 +29,7 @@ export default class RejectMetadata {
      * @type {number}
      * @memberof IRejectMetadataArgs
      */
-    code: number;
+    private _code: number;
 
     /**
      * Response message.
@@ -37,26 +37,60 @@ export default class RejectMetadata {
      * @type {string}
      * @memberof IRejectMetadataArgs
      */
-    message: string;
+    private _message: string;
 
     /**
-     * Flag, wheter the JS error message should be appended.
+     * Flag, whether the JS error message should be appended.
      *
      * @type {boolean}
      * @memberof RejectMetadata
      */
-    appendErrorMessage: boolean;
+    private _appendErrorMessage: boolean;
+
+    /**
+     * HTTP Response code.
+     *
+     * @readonly
+     * @type {number}
+     * @memberof RejectMetadata
+     */
+    public get code(): number {
+        return this._code;
+    }
+
+    /**
+     * Response message.
+     *
+     * @readonly
+     * @type {string}
+     * @memberof RejectMetadata
+     */
+    public get message(): string {
+        return this._message;
+    }
+
+    /**
+     * Flag, whether the JS error message should be appended.
+     *
+     * @readonly
+     * @type {boolean}
+     * @memberof RejectMetadata
+     */
+    public get appendErrorMessage(): boolean {
+        return this._appendErrorMessage;
+    }
 
     /**
      * Default constructor.
-     * @param {IRejectMetadataArgs} args Metadata arguments.
+     *
+     * @param {IRejectMetadataArgs} args Metadata arguments
      * @memberof RejectMetadata
      */
     constructor(args: IRejectMetadataArgs) {
-        this.target = args.target;
-        this.method = args.method;
-        this.code = args.code;
-        this.message = args.message;
-        this.appendErrorMessage = args.appendErrorMessage;
+        this._target = args.target;
+        this._method = args.method;
+        this._code = args.code;
+        this._message = args.message;
+        this._appendErrorMessage = args.appendErrorMessage;
     }
 }

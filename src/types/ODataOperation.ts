@@ -2,9 +2,9 @@
  * Operation type.
  *
  * @export
- * @enum {number}
+ * @enum {string}
  */
-export enum OperationType {
+export enum ODataOperation {
     Create = "CREATE",
     Read = "READ",
     Update = "UPDATE",

@@ -5,7 +5,7 @@ import { ParamType } from "../../types/ParamType";
  * Param parameter decorator.
  *
  * @export
- * @param {string} name
+ * @param {string} name Name of the parameter
  * @returns {ParameterDecorator}
  */
 export function Param(name: string): ParameterDecorator {

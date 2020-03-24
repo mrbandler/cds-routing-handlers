@@ -1,8 +1,8 @@
 import { getMetadataArgsStorage } from "../index";
-import ActionMetadata from "../metadata/ActionMetadata";
-import RejectMetadata from "../metadata/RejectMetadata";
-import ParamMetadata from "../metadata/ParamMetadata";
-import HandlerMetadata from "../metadata/HandlerMetadata";
+import { ActionMetadata } from "../metadata/ActionMetadata";
+import { RejectMetadata } from "../metadata/RejectMetadata";
+import { ParamMetadata } from "../metadata/ParamMetadata";
+import { HandlerMetadata } from "../metadata/HandlerMetadata";
 import { MiddlewareMetadata } from "../metadata/MiddlewareMetadata";
 
 /**
@@ -11,12 +11,12 @@ import { MiddlewareMetadata } from "../metadata/MiddlewareMetadata";
  * @export
  * @class MetadataBuilder
  */
-export default class MetadataBuilder {
+export class MetadataBuilder {
     /**
      * Builds handler metadata for a given set of handler classes.
      *
-     * @param {Function[]} [classes] Handler classes.
-     * @returns {MiddlewareMetadata[]} Build handler metadata.
+     * @param {Function[]} [classes] Handler classes
+     * @returns {MiddlewareMetadata[]} Build handler metadata
      * @memberof MetadataBuilder
      */
     public buildHandlerMetadata(classes?: Function[]): HandlerMetadata[] {
@@ -37,8 +37,8 @@ export default class MetadataBuilder {
     /**
      * Create handler metadata.
      *
-     * @param {Function[]} [classes] Handler classes to build for.
-     * @returns {MiddlewareMetadata[]} Created handler metadata.
+     * @param {Function[]} [classes] Handler classes to build for
+     * @returns {MiddlewareMetadata[]} Created handler metadata
      * @memberof MetadataBuilder
      */
     private createHandler(classes?: Function[]): HandlerMetadata[] {
@@ -55,11 +55,11 @@ export default class MetadataBuilder {
     }
 
     /**
-     *
+     * Creates middleware metadata.
      *
      * @private
-     * @param {Function[]} [classes]
-     * @returns {MiddlewareMetadata[]}
+     * @param {Function[]} [classes] Middleware classes to build for
+     * @returns {MiddlewareMetadata[]} Created middleware metadata
      * @memberof MetadataBuilder
      */
     private createMiddlewares(classes?: Function[]): MiddlewareMetadata[] {
@@ -87,8 +87,8 @@ export default class MetadataBuilder {
     /**
      * Creates action metadata.
      *
-     * @param {MiddlewareMetadata} handler Handler metadata.
-     * @returns {ActionMetadata[]} Created action metadata.
+     * @param {MiddlewareMetadata} handler Handler metadata
+     * @returns {ActionMetadata[]} Created action metadata
      * @memberof MetadataBuilder
      */
     private createActions(handler: HandlerMetadata): ActionMetadata[] {
@@ -108,8 +108,8 @@ export default class MetadataBuilder {
      * Creates a reject.
      *
      * @private
-     * @param {ActionMetadata} action
-     * @returns {(RejectMetadata | undefined)}
+     * @param {ActionMetadata} action Action to create metadata for
+     * @returns {(RejectMetadata | undefined)} Created rejection metadata
      * @memberof MetadataBuilder
      */
     private createReject(action: ActionMetadata): RejectMetadata | undefined {

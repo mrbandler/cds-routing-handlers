@@ -1,5 +1,5 @@
 import * as path from "path";
-import CDSHandler from "./CDSHandler";
+import { CDSHandler } from "./CDSHandler";
 import { MetadataArgsStorage } from "./metadata-builder/MetadataArgsStorage";
 
 export * from "./container";
@@ -24,12 +24,13 @@ export * from "./decorators/param/Next";
 export * from "./decorators/param/Locale";
 export * from "./types/ICdsMiddleware";
 export * from "./decorators/class/options/IMiddlewareOptions";
+export * from "./types/ODataOperation";
 
 /**
  * Returns the metadata arguments storage.
  *
  * @export
- * @returns {MetadataArgsStorage} Metadata arguments storage.
+ * @returns {MetadataArgsStorage} Metadata arguments storage
  */
 export function getMetadataArgsStorage(): MetadataArgsStorage {
     if (!(global as any).cdsHandlersMetadataArgsStorage)
@@ -42,9 +43,9 @@ export function getMetadataArgsStorage(): MetadataArgsStorage {
  * Imports decorated classes from directories.
  *
  * @export
- * @param {string[]} directories Directories to search in.
- * @param {string} [formats=[".js", ".ts"]] Formats to import classes from.
- * @returns {Function[]} Imported classes.
+ * @param {string[]} directories Directories to search in
+ * @param {string} [formats=[".js", ".ts"]] Formats to import classes from
+ * @returns {Function[]} Imported classes
  */
 export function importClassesFromDirectories(directories: string[], formats = [".js", ".ts"]): Function[] {
     const loadFileClasses = function(exported: any, allLoaded: Function[]) {
@@ -79,8 +80,8 @@ export function importClassesFromDirectories(directories: string[], formats = ["
  * Create combined handler.
  *
  * @export
- * @param {(Function[] | string[])} handlers Handlers; either classes directly or the directories where the handlers reside.
- * @returns {(srv: any) => void} Function that is used to register all endpoints.
+ * @param {(Function[] | string[])} handlers Handlers; either classes directly or the directories where the handlers reside
+ * @returns {(srv: any) => void} Function that is used to register all endpoints
  */
 export function createCombinedHandler(handlers: Function[] | string[], middlewares?: Function[]): (srv: any) => void {
     return (srv: any) => {
