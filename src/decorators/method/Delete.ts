@@ -1,5 +1,5 @@
 import { getMetadataArgsStorage } from "../../index";
-import { OperationType } from "../../types/OperationType";
+import { ODataOperation } from "../../types/ODataOperation";
 import { HandlerType } from "../../types/HandlerType";
 
 /**
@@ -14,7 +14,7 @@ export function BeforeDelete(): MethodDecorator {
             target: target.constructor,
             method: key as string,
             handler: HandlerType.Before,
-            operation: OperationType.Delete,
+            operation: ODataOperation.Delete,
         });
     };
 }
@@ -31,7 +31,7 @@ export function OnDelete(): MethodDecorator {
             target: target.constructor,
             method: key as string,
             handler: HandlerType.On,
-            operation: OperationType.Delete,
+            operation: ODataOperation.Delete,
         });
     };
 }
@@ -48,7 +48,7 @@ export function AfterDelete(): MethodDecorator {
             target: target.constructor,
             method: key as string,
             handler: HandlerType.After,
-            operation: OperationType.Delete,
+            operation: ODataOperation.Delete,
         });
     };
 }

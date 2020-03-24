@@ -1,5 +1,5 @@
 import { HandlerType } from "../../types/HandlerType";
-import { OperationType } from "../../types/OperationType";
+import { ODataOperation } from "../../types/ODataOperation";
 
 /**
  * Action metadata arguments.
@@ -7,7 +7,7 @@ import { OperationType } from "../../types/OperationType";
  * @export
  * @interface ICRUDMetadataArgs
  */
-export default interface IActionMetadataArgs {
+export interface IActionMetadataArgs {
     /**
      * Target: JS function of the handler class method.
      *
@@ -35,10 +35,10 @@ export default interface IActionMetadataArgs {
     /**
      * Operation type.
      *
-     * @type {OperationType}
+     * @type {ODataOperation}
      * @memberof IActionMetadataArgs
      */
-    operation: OperationType;
+    operation: ODataOperation;
 
     /**
      * Function import name.

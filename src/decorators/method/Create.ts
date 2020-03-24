@@ -1,6 +1,6 @@
 import { getMetadataArgsStorage } from "../../index";
 import { HandlerType } from "../../types/HandlerType";
-import { OperationType } from "../../types/OperationType";
+import { ODataOperation } from "../../types/ODataOperation";
 
 /**
  * Before create handler decorator.
@@ -14,7 +14,7 @@ export function BeforeCreate(): MethodDecorator {
             target: target.constructor,
             method: key.toString(),
             handler: HandlerType.Before,
-            operation: OperationType.Create,
+            operation: ODataOperation.Create,
         });
     };
 }
@@ -31,7 +31,7 @@ export function OnCreate(): MethodDecorator {
             target: target.constructor,
             method: key.toString(),
             handler: HandlerType.On,
-            operation: OperationType.Create,
+            operation: ODataOperation.Create,
         });
     };
 }
@@ -48,7 +48,7 @@ export function AfterCreate(): MethodDecorator {
             target: target.constructor,
             method: key.toString(),
             handler: HandlerType.After,
-            operation: OperationType.Create,
+            operation: ODataOperation.Create,
         });
     };
 }

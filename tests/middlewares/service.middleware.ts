@@ -1,7 +1,8 @@
-// import { IMiddleware, Srv } from "../../lib";
+import { Middleware, ICdsMiddleware, Srv } from "../../lib";
 
-// export class ServiceMiddleware implements IMiddleware {
-//     use(@Srv() srv: string): Promise<boolean> {
-//         throw new Error("Method not implemented.");
-//     }
-// }
+@Middleware({ global: true, priority: 1 })
+export class ServiceMiddleware implements ICdsMiddleware {
+    public async use(@Srv() srv: any): Promise<void> {
+        console.log("I am global middleware prio 1");
+    }
+}

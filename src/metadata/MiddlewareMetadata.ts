@@ -1,77 +1,175 @@
-import ParamMetadata from "./ParamMetadata";
+import { ParamMetadata } from "./ParamMetadata";
 import { getFromContainer } from "../index";
-import { IMiddleware } from "../types/IMiddleware";
+import { ICdsMiddleware } from "../types/ICdsMiddleware";
 import { IMiddlewareMetadataArgs } from "./args/IMiddlewareMetadataArgs";
-import { Executer } from "./base/Executer";
+import { Executor } from "./base/Executer";
 import { IExecContext } from "../types/IExecContext";
+import { UserCheckerMetadata } from "./UserCheckerMetadata";
 
 /**
- *
+ * Middleware metadata and executer.
  *
  * @export
  * @class MiddlewareMetadata
  */
-export class MiddlewareMetadata extends Executer {
+export class MiddlewareMetadata extends Executor {
     /**
-     *
+     * Target: Typescript class.
      *
      * @type {Function}
      * @memberof MiddlewareMetadata
      */
-    target: Function;
+    private _target: Function;
 
     /**
-     *
+     * Flag, whether this middleware is a global one.
      *
      * @type {boolean}
      * @memberof MiddlewareMetadata
      */
-    global: boolean;
+    private _global: boolean;
 
     /**
-     *
+     * Priority of a global middleware.
      *
      * @type {number}
      * @memberof MiddlewareMetadata
      */
-    priority: number;
+    private _priority: number;
 
     /**
+     * Entities on which to apply the middleware.
      *
+     * @type {string}
+     * @memberof MiddlewareMetadata
+     */
+    private _entities?: string[];
+
+    /**
+     * Middleware parameters.
      *
      * @type {ParamMetadata[]}
      * @memberof MiddlewareMetadata
      */
-    params: ParamMetadata[] = [];
+    private _params: ParamMetadata[] = [];
 
     /**
+     * User checker.
      *
-     *
-     * @readonly
-     * @type {IMiddleware}
+     * @private
+     * @type {UserCheckerMetadata}
      * @memberof MiddlewareMetadata
      */
-    get instance(): IMiddleware {
-        return getFromContainer<IMiddleware>(this.target);
+    private _userChecker?: UserCheckerMetadata;
+
+    /**
+     * Target: Typescript class.
+     *
+     * @readonly
+     * @type {Function}
+     * @memberof MiddlewareMetadata
+     */
+    public get target(): Function {
+        return this._target;
+    }
+
+    /**
+     * Flag, whether this middleware is a global one.
+     *
+     * @readonly
+     * @type {boolean}
+     * @memberof MiddlewareMetadata
+     */
+    public get global(): boolean {
+        return this._global;
+    }
+
+    /**
+     * Priority of a global middleware.
+     *
+     * @readonly
+     * @type {number}
+     * @memberof MiddlewareMetadata
+     */
+    public get priority(): number {
+        return this._priority;
+    }
+
+    /**
+     * Entities on which to apply the middleware.
+     *
+     * @type {string[]}
+     * @memberof MiddlewareMetadata
+     */
+    public get entities(): string[] | undefined {
+        return this._entities;
+    }
+
+    /**
+     * Middleware parameters.
+     *
+     * @memberof MiddlewareMetadata
+     */
+    public set params(value: ParamMetadata[]) {
+        this._params = value;
+    }
+
+    /**
+     * Entities on which to apply the middleware.
+     *
+     * @memberof MiddlewareMetadata
+     */
+    public set entities(value: string[] | undefined) {
+        this._entities = value;
+    }
+
+    /**
+     * User checker.
+     *
+     * @memberof MiddlewareMetadata
+     */
+    public set userChecker(value: UserCheckerMetadata | undefined) {
+        this._userChecker = value;
+    }
+
+    /**
+     * Returns the instance of the middleware target.
+     *
+     * @readonly
+     * @type {ICdsMiddleware}
+     * @memberof MiddlewareMetadata
+     */
+    get instance(): ICdsMiddleware {
+        return getFromContainer<ICdsMiddleware>(this._target);
     }
 
     /**
      * Default constructor.
-     * @param {IMiddlewareMetadataArgs} args
+     *
+     * @param {IMiddlewareMetadataArgs} args Middleware metadata arguments
      * @memberof MiddlewareMetadata
      */
     constructor(args: IMiddlewareMetadataArgs) {
         super();
 
-        this.global = args.global;
-        this.target = args.target;
-        this.priority = args.priority;
+        this._global = args.global;
+        this._target = args.target;
+        this._priority = args.priority;
     }
 
-    public exec(context: IExecContext): any {
+    /**
+     * Executes the middleware.
+     *
+     * @param {IExecContext} context Execution context
+     * @returns {*} Execution result
+     * @memberof MiddlewareMetadata
+     */
+    public async exec(context: IExecContext): Promise<any> {
         const instance = this.instance;
-        const params = this.buildParams(this.params, context);
+        const params = await this.buildParams(this._params, context, this._userChecker);
 
-        return instance["use"].apply(instance, params);
+        if (instance["use"]) {
+            return instance.use.apply(instance, params);
+        }
     }
 }

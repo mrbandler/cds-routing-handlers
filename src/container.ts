@@ -1,5 +1,8 @@
 /**
  * Container options.
+ *
+ * @export
+ * @interface IUseContainerOptions
  */
 export interface IUseContainerOptions {
     /**
@@ -35,6 +38,10 @@ let userContainerOptions: IUseContainerOptions | undefined;
 
 /**
  * Sets container to be used by this library.
+ *
+ * @export
+ * @param {{ get(someClass: any): any }} iocContainer
+ * @param {IUseContainerOptions} [options]
  */
 export function useContainer(iocContainer: { get(someClass: any): any }, options?: IUseContainerOptions) {
     userContainer = iocContainer;
@@ -43,6 +50,11 @@ export function useContainer(iocContainer: { get(someClass: any): any }, options
 
 /**
  * Gets the IOC container used by this library.
+ *
+ * @export
+ * @template T
+ * @param {({ new (...args: any[]): T } | Function)} someClass
+ * @returns {T}
  */
 export function getFromContainer<T>(someClass: { new (...args: any[]): T } | Function): T {
     if (userContainer) {

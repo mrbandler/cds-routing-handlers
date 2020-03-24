@@ -1,8 +1,10 @@
-import IHandlerMetadataArgs from "../metadata/args/IHandlerMetadataArgs";
-import IActionMetadataArgs from "../metadata/args/IActionMetadataArgs";
-import IRejectMetadataArgs from "../metadata/args/IRejectMetadataArgs";
-import IParamMetadataArgs from "../metadata/args/IParamMetadataArgs";
+import { IHandlerMetadataArgs } from "../metadata/args/IHandlerMetadataArgs";
+import { IActionMetadataArgs } from "../metadata/args/IActionMetadataArgs";
+import { IRejectMetadataArgs } from "../metadata/args/IRejectMetadataArgs";
+import { IParamMetadataArgs } from "../metadata/args/IParamMetadataArgs";
 import { IUseMetadataArgs } from "../metadata/args/IUseMetadataArgs";
+import { IMiddlewareMetadataArgs } from "../metadata/args/IMiddlewareMetadataArgs";
+import { IUserCheckerMetadataArgs } from "../metadata/args/IUserCheckerMetadataArgs";
 
 /**
  * Metadata arguments storage.
@@ -20,14 +22,14 @@ export class MetadataArgsStorage {
      */
     private handler: IHandlerMetadataArgs[] = [];
 
-    // /**
-    //  * Middleware metadata arguments.
-    //  *
-    //  * @private
-    //  * @type {IMiddlewareMetadataArgs[]}
-    //  * @memberof MetadataArgsStorage
-    //  */
-    // private middlewares: IMiddlewareMetadataArgs[] = [];
+    /**
+     * Middleware metadata arguments.
+     *
+     * @private
+     * @type {IMiddlewareMetadataArgs[]}
+     * @memberof MetadataArgsStorage
+     */
+    private middlewares: IMiddlewareMetadataArgs[] = [];
 
     /**
      * Registerd middleware usage metadata args.
@@ -66,46 +68,55 @@ export class MetadataArgsStorage {
     private params: IParamMetadataArgs[] = [];
 
     /**
+     * User checker metadata arguments.
+     *
+     * @private
+     * @type {IUserCheckerMetadataArgs}
+     * @memberof MetadataArgsStorage
+     */
+    private userChecker: IUserCheckerMetadataArgs[] = [];
+
+    /**
      * Handler metadata.
      *
      * @readonly
      * @type {IHandlerMetadataArgs[]}
      * @memberof MetadataArgsStorage
      */
-    get handlerMetadata(): IHandlerMetadataArgs[] {
+    public get handlerMetadata(): IHandlerMetadataArgs[] {
         return this.handler;
     }
 
-    // /**
-    //  * Middleware metadata.
-    //  *
-    //  * @readonly
-    //  * @type {IMiddlewareMetadataArgs[]}
-    //  * @memberof MetadataArgsStorage
-    //  */
-    // get middlewareMetadata(): IMiddlewareMetadataArgs[] {
-    //     return this.middlewares;
-    // }
+    /**
+     * Middleware metadata.
+     *
+     * @readonly
+     * @type {IMiddlewareMetadataArgs[]}
+     * @memberof MetadataArgsStorage
+     */
+    public get middlewareMetadata(): IMiddlewareMetadataArgs[] {
+        return this.middlewares;
+    }
 
     /**
      * Adds handler metadata.
      *
-     * @param {IHandlerMetadataArgs} metadata Metadata arguments.
+     * @param {IHandlerMetadataArgs} metadata Metadata arguments
      * @memberof MetadataArgsStorage
      */
     public addHandlerMetadata(metadata: IHandlerMetadataArgs): void {
         this.handler.push(metadata);
     }
 
-    // /**
-    //  * Adds a middleware metadata.
-    //  *
-    //  * @param {IMiddlewareMetadataArgs} metadata Metadata arguments
-    //  * @memberof MetadataArgsStorage
-    //  */
-    // public addMiddlewareMetadata(metadata: IMiddlewareMetadataArgs): void {
-    //     this.middlewares.push(metadata);
-    // }
+    /**
+     * Adds middleware metadata.
+     *
+     * @param {IMiddlewareMetadataArgs} metadata Metadata arguments
+     * @memberof MetadataArgsStorage
+     */
+    public addMiddlewareMetadata(metadata: IMiddlewareMetadataArgs): void {
+        this.middlewares.push(metadata);
+    }
 
     /**
      * Adds a middleware usage metadata.
@@ -120,7 +131,7 @@ export class MetadataArgsStorage {
     /**
      * Adds action metadata.
      *
-     * @param {IActionMetadataArgs} metadata Metadata arguments.
+     * @param {IActionMetadataArgs} metadata Metadata arguments
      * @memberof MetadataArgsStorage
      */
     public addActionMetadata(metadata: IActionMetadataArgs): void {
@@ -130,21 +141,21 @@ export class MetadataArgsStorage {
     /**
      * Adds reject metadata.
      *
-     * @param {IRejectMetadataArgs} metadata Metadata arguements.
+     * @param {IRejectMetadataArgs} metadata Metadata arguements
      * @memberof MetadataArgsStorage
      */
     public addRejectMetadata(metadata: IRejectMetadataArgs): void {
         if (this.filterRejectWithTargetAndMethod(metadata.target, metadata.method) === undefined) {
             this.rejects.push(metadata);
         } else {
-            //TODO: Output error that only one reject can be registered per action.
+            console.warn(`Only one OnReject can be registerd per action (${metadata.target.name}::${metadata.method})`);
         }
     }
 
     /**
      * Adds parameter metadata.
      *
-     * @param {IParamMetadataArgs} metadata Metadata arguments.
+     * @param {IParamMetadataArgs} metadata Metadata arguments
      * @memberof MetadataArgsStorage
      */
     public addParamMetadata(metadata: IParamMetadataArgs): void {
@@ -152,10 +163,20 @@ export class MetadataArgsStorage {
     }
 
     /**
+     * Adds user checker metadata.
+     *
+     * @param {IUserCheckerMetadataArgs} metadata Metadata arguments
+     * @memberof MetadataArgsStorage
+     */
+    public addUserCheckerMetadata(metadata: IUserCheckerMetadataArgs): void {
+        this.userChecker.push(metadata);
+    }
+
+    /**
      * Filters handler metadata for given classes.
      *
-     * @param {Function[]} classes Handler classes.
-     * @returns {IHandlerMetadataArgs[]} Filtered handler metadata.
+     * @param {Function[]} classes Handler classes
+     * @returns {IHandlerMetadataArgs[]} Filtered handler metadata
      * @memberof MetadataArgsStorage
      */
     public filterHandlerMetadataForClasses(classes: Function[]): IHandlerMetadataArgs[] {
@@ -164,37 +185,36 @@ export class MetadataArgsStorage {
         });
     }
 
-    // /**
-    //  * Filters middleware metadata for given classes.
-    //  *
-    //  * @param {Function} classes Middleware classes.
-    //  * @returns {IMiddlewareMetadataArgs[]} Filtered middleware metadata.
-    //  * @memberof MetadataArgsStorage
-    //  */
-    // public filterMiddlewareMetadataForClasses(classes: Function[]): IMiddlewareMetadataArgs[] {
-    //     const middlewares = classes.map(cls => this.middlewares.find(mid => mid.target === cls));
-    //     return middlewares.filter(midd => midd !== undefined) as IMiddlewareMetadataArgs[];
-    // }
-
     /**
-     * Filters registerd middleware usages for a given target class and/or method name.
+     * Filters middleware metadata for given classes.
      *
-     * @param {Function} target Target class.
-     * @param {string} method Method name.
-     * @returns {IUseMetadataArgs[]} Filtered middleware usages.
+     * @param {Function} classes Middleware classes
+     * @returns {IMiddlewareMetadataArgs[]} Filtered middleware metadata
      * @memberof MetadataArgsStorage
      */
-    public filterUsesWithTargetAndMethod(target: Function, method?: string): IUseMetadataArgs[] {
+    public filterMiddlewareMetadataForClasses(classes: Function[]): IMiddlewareMetadataArgs[] {
+        const middlewares = classes.map(cls => this.middlewares.find(mid => mid.target === cls));
+        return middlewares.filter(midd => midd !== undefined) as IMiddlewareMetadataArgs[];
+    }
+
+    /**
+     * Filters registerd middleware usages for a given middleware.
+     *
+     * @param {Function} middleware Middleware to filter for
+     * @returns {IUseMetadataArgs[]} Filterd usage metadata
+     * @memberof MetadataArgsStorage
+     */
+    public filterUsesWithMiddleware(middleware: Function): IUseMetadataArgs[] {
         return this.uses.filter(use => {
-            return use.target === target && use.method === method;
+            return use.middleware === middleware;
         });
     }
 
     /**
      * Filters action metadata for given target.
      *
-     * @param {Function} target Target of the action.
-     * @returns {IActionMetadataArgs[]} Filtered action metadata.
+     * @param {Function} target Target of the action
+     * @returns {IActionMetadataArgs[]} Filtered action metadata
      * @memberof MetadataArgsStorage
      */
     public filterActionsWithTarget(target: Function): IActionMetadataArgs[] {
@@ -233,16 +253,30 @@ export class MetadataArgsStorage {
     }
 
     /**
+     * Finds a user checker for a given target.
+     *
+     * @param {Function} target Target to find for
+     * @returns {(IUserCheckerMetadataArgs | undefined)} Found user checker
+     * @memberof MetadataArgsStorage
+     */
+    public findUserCheckerWithTarget(target: Function | undefined): IUserCheckerMetadataArgs | undefined {
+        if (target) {
+            return this.userChecker.find(uc => uc.target === target);
+        }
+    }
+
+    /**
      * Resets the storage.
      *
      * @memberof MetadataArgsStorage
      */
     public reset(): void {
         this.handler = [];
-        // this.middlewares = [];
+        this.middlewares = [];
         this.uses = [];
         this.actions = [];
         this.rejects = [];
         this.params = [];
+        this.userChecker = [];
     }
 }

@@ -1,6 +1,6 @@
 import { getMetadataArgsStorage } from "../../index";
 import { HandlerType } from "../../types/HandlerType";
-import { OperationType } from "../../types/OperationType";
+import { ODataOperation } from "../../types/ODataOperation";
 
 /**
  * Before read handler decorator.
@@ -14,7 +14,7 @@ export function BeforeRead(): MethodDecorator {
             target: target.constructor,
             method: key as string,
             handler: HandlerType.Before,
-            operation: OperationType.Read,
+            operation: ODataOperation.Read,
         });
     };
 }
@@ -31,7 +31,7 @@ export function OnRead(): MethodDecorator {
             target: target.constructor,
             method: key as string,
             handler: HandlerType.On,
-            operation: OperationType.Read,
+            operation: ODataOperation.Read,
         });
     };
 }
@@ -48,7 +48,7 @@ export function AfterRead(): MethodDecorator {
             target: target.constructor,
             method: key as string,
             handler: HandlerType.After,
-            operation: OperationType.Read,
+            operation: ODataOperation.Read,
         });
     };
 }

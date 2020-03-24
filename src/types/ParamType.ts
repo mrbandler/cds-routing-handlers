@@ -14,4 +14,5 @@ export enum ParamType {
     Entities,
     Next,
     Locale,
+    User,
 }

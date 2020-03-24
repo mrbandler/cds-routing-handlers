@@ -1,6 +1,6 @@
 import { getMetadataArgsStorage } from "../../index";
 import { HandlerType } from "../../types/HandlerType";
-import { OperationType } from "../../types/OperationType";
+import { ODataOperation } from "../../types/ODataOperation";
 
 /**
  * Action handler decorator.
@@ -15,7 +15,7 @@ export function Action(name: string): MethodDecorator {
             target: target.constructor,
             method: key as string,
             handler: HandlerType.On,
-            operation: OperationType.Action,
+            operation: ODataOperation.Action,
             functionImportName: name,
         });
     };

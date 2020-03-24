@@ -1,6 +1,7 @@
-import ParamMetadata from "../ParamMetadata";
+import { ParamMetadata } from "../ParamMetadata";
 import { IExecContext } from "../../types/IExecContext";
 import { ParamType } from "../../types/ParamType";
+import { UserCheckerMetadata } from "../UserCheckerMetadata";
 
 /**
  * Abstract executer class.
@@ -11,7 +12,7 @@ import { ParamType } from "../../types/ParamType";
  * @abstract
  * @class Executer
  */
-export abstract class Executer {
+export abstract class Executor {
     /**
      * Abstract exec method, to be implemented in the child class.
      *
@@ -21,7 +22,7 @@ export abstract class Executer {
      * @returns {*} Result
      * @memberof Executer
      */
-    public abstract exec(context: IExecContext): any;
+    public abstract async exec(context: IExecContext): Promise<any>;
 
     /**
      * Builds a paramter list out of all definied parameter decorators.
@@ -32,7 +33,11 @@ export abstract class Executer {
      * @returns
      * @memberof Executer
      */
-    protected buildParams(params: ParamMetadata[], context: IExecContext) {
+    protected async buildParams(
+        params: ParamMetadata[],
+        context: IExecContext,
+        userChecker?: UserCheckerMetadata
+    ): Promise<any[]> {
         const sortedParams = params.sort((a, b) => {
             if (a.index > b.index) return 1;
             if (b.index > a.index) return -1;
@@ -40,7 +45,7 @@ export abstract class Executer {
             return 0;
         });
 
-        return sortedParams.map(param => {
+        const mappedParams = sortedParams.map(param => {
             switch (param.type) {
                 case ParamType.Srv:
                     return context.srv;
@@ -51,7 +56,7 @@ export abstract class Executer {
                 case ParamType.ParamObj:
                     return context.req.data;
                 case ParamType.Param:
-                    return this.buildParam(param, context.req);
+                    return this.namedParam(param, context.req);
                 case ParamType.Jwt:
                     return context.req.attr.token || "";
                 case ParamType.Entities:
@@ -60,8 +65,12 @@ export abstract class Executer {
                     return context.next;
                 case ParamType.Locale:
                     return context.req.user.locale;
+                case ParamType.User:
+                    return userChecker ? userChecker.exec(context) : undefined;
             }
         });
+
+        return await Promise.all(mappedParams);
     }
 
     /**
@@ -73,7 +82,7 @@ export abstract class Executer {
      * @returns {*} Builds parameter
      * @memberof Executer
      */
-    protected buildParam(param: ParamMetadata, req: any): any {
+    protected namedParam(param: ParamMetadata, req: any): any {
         let result = undefined;
 
         if (param.name) {

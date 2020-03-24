@@ -6,9 +6,9 @@ import { ParamType } from "../../types/ParamType";
  * @export
  * @interface IParamMetadataArgs
  */
-export default interface IParamMetadataArgs {
+export interface IParamMetadataArgs {
     /**
-     * bject on which's method's parameter this parameter is attached.
+     * Object on which the method's parameter this parameter is attached.
      *
      * @type {*}
      * @memberof IParamMetadataArgs
