@@ -2,6 +2,9 @@ import "reflect-metadata";
 import * as handler from "../lib/index";
 import express from "express";
 import { Container } from "typedi";
+import { ServiceMiddleware } from "./middlewares/service.middleware";
+import { ServiceTwoMiddleware } from "./middlewares/service.two.middleware";
+import { HandlerMiddleware } from "./middlewares/handler.middleware";
 
 const odatav2proxy = require("@sap/cds-odata-v2-adapter-proxy");
 const cds = require("@sap/cds");
@@ -13,7 +16,10 @@ class Main {
         const genPath = __dirname + "/gen/csn.json";
 
         handler.useContainer(Container);
-        const hdl = handler.createCombinedHandler([__dirname + "/handlers/**/*.js"]);
+        const hdl = handler.createCombinedHandler(
+            [__dirname + "/handlers/**/*.js"],
+            [ServiceMiddleware, ServiceTwoMiddleware, HandlerMiddleware]
+        );
         cds.serve(genPath)
             .at("odata")
             .in(server)
@@ -21,7 +27,7 @@ class Main {
                 hdl(srv);
             })
             .catch((error: any) => {
-                console.log("Starup error: ", error);
+                console.log("Startup error: ", error);
                 process.exit(1);
             });
 

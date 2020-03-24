@@ -3,6 +3,7 @@ import ActionMetadata from "./metadata/ActionMetadata";
 import { HandlerType } from "./types/HandlerType";
 import { OperationType } from "./types/OperationType";
 import { IExecContext } from "./types/IExecContext";
+import { MiddlewareMetadata } from "./metadata/MiddlewareMetadata";
 
 /**
  * CDS Handler.
@@ -12,15 +13,75 @@ import { IExecContext } from "./types/IExecContext";
  */
 export default class CDSHandler {
     /**
-     * Registers all handlers on the given service.
+     * Registers all handlers and middlewares on the given service.
      *
      * @static
-     * @param {*} srv Service to register the handlers on.
-     * @param {Function[]} classes Handler classes.
+     * @param {*} srv Service to register the handlers on
+     * @param {Function[]} handlerClasses Handler classes
+     * @param {Function[]} middlewareClasses Middleware classes
      * @memberof CDSHandler
      */
-    public static registerHandlers(srv: any, classes: Function[]): void {
-        const handlers = new MetadataBuilder().buildHandlerMetadata(classes);
+    public static register(srv: any, handlerClasses: Function[], middlewareClasses?: Function[]): void {
+        const metadataBuilder = new MetadataBuilder();
+
+        if (middlewareClasses) {
+            this.registerMiddlewareClasses(metadataBuilder, srv, middlewareClasses);
+        }
+
+        this.registerHandlerClasses(metadataBuilder, srv, handlerClasses);
+    }
+
+    /**
+     * Registers all middleware classes.
+     *
+     * @private
+     * @static
+     * @param {MetadataBuilder} metadataBuilder Metadata builder
+     * @param {*} srv Service to register the handlers to
+     * @param {Function[]} middlewareClasses Middleware classes
+     * @memberof CDSHandler
+     */
+    private static registerMiddlewareClasses(
+        metadataBuilder: MetadataBuilder,
+        srv: any,
+        middlewareClasses: Function[]
+    ): void {
+        const middlewares = metadataBuilder.buildMiddlewareMetadata(middlewareClasses);
+        const globalSortedMiddlewares = middlewares
+            .filter(m => m.global)
+            .sort((a, b) => {
+                if (a.priority > b.priority) return 1;
+                if (b.priority > a.priority) return -1;
+
+                return 0;
+            });
+
+        globalSortedMiddlewares.forEach(middleware => {
+            this.registerMiddleware(srv, middleware);
+        });
+
+        const usageMiddlewares = middlewares.filter(m => !m.global);
+        usageMiddlewares.forEach(middleware => {
+            this.registerMiddleware(srv, middleware);
+        });
+    }
+
+    /**
+     * Register all handler classes.
+     *
+     * @private
+     * @static
+     * @param {MetadataBuilder} metadataBuilder Metadata builder
+     * @param {*} srv Service to register the handlers to
+     * @param {Function[]} handlerClasses Handler classes
+     * @memberof CDSHandler
+     */
+    private static registerHandlerClasses(
+        metadataBuilder: MetadataBuilder,
+        srv: any,
+        handlerClasses: Function[]
+    ): void {
+        const handlers = metadataBuilder.buildHandlerMetadata(handlerClasses);
         handlers.forEach(handler => {
             handler.actions.forEach(action => {
                 try {
@@ -55,8 +116,8 @@ export default class CDSHandler {
      *
      * @private
      * @static
-     * @param {*} srv
-     * @param {ActionMetadata} action
+     * @param {*} srv Service to register to
+     * @param {ActionMetadata} action Action to register
      * @memberof CDSHandler
      */
     private static registerBeforeHandler(srv: any, action: ActionMetadata): void {
@@ -73,8 +134,8 @@ export default class CDSHandler {
      *
      * @private
      * @static
-     * @param {*} srv
-     * @param {ActionMetadata} action
+     * @param {*} srv Service to register to
+     * @param {ActionMetadata} action Action to register
      * @memberof CDSHandler
      */
     private static registerOnHandler(srv: any, action: ActionMetadata): void {
@@ -91,8 +152,8 @@ export default class CDSHandler {
      *
      * @private
      * @static
-     * @param {*} srv
-     * @param {ActionMetadata} action
+     * @param {*} srv Service to register to
+     * @param {ActionMetadata} action Action to register
      * @memberof CDSHandler
      */
     private static registerAfterHandler(srv: any, action: ActionMetadata): void {
@@ -109,8 +170,8 @@ export default class CDSHandler {
      *
      * @private
      * @static
-     * @param {*} srv
-     * @param {ActionMetadata} action
+     * @param {*} srv Service to register to
+     * @param {ActionMetadata} action Action to register
      * @memberof CDSHandler
      */
     private static registerFunctionImportHandler(srv: any, action: ActionMetadata): void {
@@ -123,6 +184,31 @@ export default class CDSHandler {
             srv.on(action.functionImportName, action.entity, async (req: any, next: Function) => {
                 const context = this.createExecutionContext(srv, req, next);
                 return await action.exec(context);
+            });
+        }
+    }
+
+    /**
+     * Registers a middleware with CDS.
+     *
+     * @private
+     * @static
+     * @param {*} srv Service to register to
+     * @param {MiddlewareMetadata} middleware Middleware to register
+     * @memberof CDSHandler
+     */
+    private static registerMiddleware(srv: any, middleware: MiddlewareMetadata): void {
+        if (middleware.entities) {
+            middleware.entities.forEach(entity => {
+                srv.before("*", entity, async (req: any, next: Function) => {
+                    const context = this.createExecutionContext(srv, req, next);
+                    return await middleware.exec(context);
+                });
+            });
+        } else {
+            srv.before("*", async (req: any, next: Function) => {
+                const context = this.createExecutionContext(srv, req, next);
+                return await middleware.exec(context);
             });
         }
     }

@@ -1,4 +1,5 @@
-import { Handler, Req, OnRead, OnReject, AfterRead, Entities, Next, Data } from "../../lib";
+import { Handler, Req, OnRead, OnReject, AfterRead, Entities, Next, Data, Use } from "../../lib";
+import { HandlerMiddleware } from "../middlewares/handler.middleware";
 
 interface IData {
     Id: string;
@@ -6,7 +7,8 @@ interface IData {
     Message: string;
 }
 
-@Handler("Greeters")
+@Handler("Greeter")
+@Use(HandlerMiddleware)
 export class GreeterHandler {
     @OnRead()
     @OnReject(500, "Nope", true)

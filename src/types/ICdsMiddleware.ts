@@ -4,6 +4,6 @@
  * @export
  * @interface IMiddleware
  */
-export interface IMiddleware {
-    use(...args: any[]): Promise<boolean>;
+export interface ICdsMiddleware {
+    use(...args: any[]): Promise<void>;
 }

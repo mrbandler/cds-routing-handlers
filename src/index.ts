@@ -4,6 +4,8 @@ import { MetadataArgsStorage } from "./metadata-builder/MetadataArgsStorage";
 
 export * from "./container";
 export * from "./decorators/class/Handler";
+export * from "./decorators/class/Use";
+export * from "./decorators/class/Middleware";
 export * from "./decorators/method/Create";
 export * from "./decorators/method/Read";
 export * from "./decorators/method/Update";
@@ -20,7 +22,8 @@ export * from "./decorators/param/Entities";
 export * from "./decorators/param/Data";
 export * from "./decorators/param/Next";
 export * from "./decorators/param/Locale";
-// export * from "./types/IMiddleware";
+export * from "./types/ICdsMiddleware";
+export * from "./decorators/class/options/IMiddlewareOptions";
 
 /**
  * Returns the metadata arguments storage.
@@ -79,15 +82,21 @@ export function importClassesFromDirectories(directories: string[], formats = ["
  * @param {(Function[] | string[])} handlers Handlers; either classes directly or the directories where the handlers reside.
  * @returns {(srv: any) => void} Function that is used to register all endpoints.
  */
-export function createCombinedHandler(handlers: Function[] | string[]): (srv: any) => void {
+export function createCombinedHandler(handlers: Function[] | string[], middlewares?: Function[]): (srv: any) => void {
     return (srv: any) => {
+        if (!(srv.before && srv.on && srv.after)) {
+            console.error("Service (srv) parameter does not seem to be a CDS service implementation");
+
+            return;
+        }
+
         let handlerClasses: Function[];
         if (handlers && handlers.length) {
             handlerClasses = (handlers as any[]).filter(controller => controller instanceof Function);
             const handlerDirs = (handlers as any[]).filter(controller => typeof controller === "string");
             handlerClasses.push(...importClassesFromDirectories(handlerDirs));
 
-            CDSHandler.registerHandlers(srv, handlerClasses);
+            CDSHandler.register(srv, handlerClasses, middlewares);
         }
     };
 }
