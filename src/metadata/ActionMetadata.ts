@@ -6,6 +6,7 @@ import { HandlerType } from "../types/HandlerType";
 import { ODataOperation } from "../types/ODataOperation";
 import { Executor } from "./base/Executer";
 import { IExecContext } from "../types/IExecContext";
+import { UserCheckerMetadata } from "./UserCheckerMetadata";
 
 /**
  * Action metadata and executer.
@@ -85,6 +86,15 @@ export class ActionMetadata extends Executor {
      * @memberof ActionMetadata
      */
     private _params: ParamMetadata[] = [];
+
+    /**
+     * User checker.
+     *
+     * @private
+     * @type {UserCheckerMetadata}
+     * @memberof ActionMetadata
+     */
+    private _userChecker?: UserCheckerMetadata;
 
     /**
      * Target: Method on the handler class.
@@ -171,6 +181,15 @@ export class ActionMetadata extends Executor {
     }
 
     /**
+     * User checker.
+     *
+     * @memberof ActionMetadata
+     */
+    public set userChecker(value: UserCheckerMetadata | undefined) {
+        this._userChecker = value;
+    }
+
+    /**
      * Default constructor.
      *
      * @param {HandlerMetadata} handlerMetadata Handler metadata
@@ -197,11 +216,11 @@ export class ActionMetadata extends Executor {
      * @returns {*} Execution result
      * @memberof ActionMetadata
      */
-    public exec(context: IExecContext): any {
+    public async exec(context: IExecContext): Promise<any> {
         let result = undefined;
 
         const instance = this._handlerMetadata.instance;
-        const params = this.buildParams(this._params, context);
+        const params = await this.buildParams(this._params, context, this._userChecker);
 
         if (this._reject) {
             try {

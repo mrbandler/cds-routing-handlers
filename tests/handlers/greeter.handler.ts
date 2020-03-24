@@ -1,5 +1,6 @@
-import { Handler, Req, OnRead, OnReject, AfterRead, Entities, Next, Data, Use } from "../../lib";
+import { Handler, Req, OnRead, OnReject, AfterRead, Entities, Next, Data, Use, User } from "../../lib";
 import { HandlerMiddleware } from "../middlewares/handler.middleware";
+import { IUser } from "../IUser";
 
 interface IData {
     Id: string;
@@ -12,9 +13,15 @@ interface IData {
 export class GreeterHandler {
     @OnRead()
     @OnReject(500, "Nope", true)
-    public async read(@Req() req: any, @Next() next: Function, @Data() data: IData): Promise<IData[]> {
+    public async read(
+        @Req() req: any,
+        @Next() next: Function,
+        @Data() data: IData,
+        @User() user: IUser
+    ): Promise<IData[]> {
         console.log(next);
         console.log(data);
+        console.log(user);
 
         return [
             {

@@ -4,6 +4,7 @@ import { ICdsMiddleware } from "../types/ICdsMiddleware";
 import { IMiddlewareMetadataArgs } from "./args/IMiddlewareMetadataArgs";
 import { Executor } from "./base/Executer";
 import { IExecContext } from "../types/IExecContext";
+import { UserCheckerMetadata } from "./UserCheckerMetadata";
 
 /**
  * Middleware metadata and executer.
@@ -51,6 +52,15 @@ export class MiddlewareMetadata extends Executor {
      * @memberof MiddlewareMetadata
      */
     private _params: ParamMetadata[] = [];
+
+    /**
+     * User checker.
+     *
+     * @private
+     * @type {UserCheckerMetadata}
+     * @memberof MiddlewareMetadata
+     */
+    private _userChecker?: UserCheckerMetadata;
 
     /**
      * Target: Typescript class.
@@ -114,6 +124,15 @@ export class MiddlewareMetadata extends Executor {
     }
 
     /**
+     * User checker.
+     *
+     * @memberof MiddlewareMetadata
+     */
+    public set userChecker(value: UserCheckerMetadata | undefined) {
+        this._userChecker = value;
+    }
+
+    /**
      * Returns the instance of the middleware target.
      *
      * @readonly
@@ -145,12 +164,12 @@ export class MiddlewareMetadata extends Executor {
      * @returns {*} Execution result
      * @memberof MiddlewareMetadata
      */
-    public exec(context: IExecContext): any {
+    public async exec(context: IExecContext): Promise<any> {
         const instance = this.instance;
-        const params = this.buildParams(this._params, context);
+        const params = await this.buildParams(this._params, context, this._userChecker);
 
         if (instance["use"]) {
-            return instance["use"].apply(instance, params);
+            return instance.use.apply(instance, params);
         }
     }
 }

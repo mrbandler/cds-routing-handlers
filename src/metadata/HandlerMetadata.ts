@@ -69,6 +69,16 @@ export class HandlerMetadata {
     /**
      * Actions metadata.
      *
+     * @type {ActionMetadata[]}
+     * @memberof HandlerMetadata
+     */
+    public get actions(): ActionMetadata[] {
+        return this._actions;
+    }
+
+    /**
+     * Actions metadata.
+     *
      * @memberof HandlerMetadata
      */
     public set actions(value: ActionMetadata[]) {

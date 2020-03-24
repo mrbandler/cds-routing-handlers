@@ -4,6 +4,7 @@ import { HandlerType } from "./types/HandlerType";
 import { ODataOperation } from "./types/ODataOperation";
 import { IExecContext } from "./types/IExecContext";
 import { MiddlewareMetadata } from "./metadata/MiddlewareMetadata";
+import { IRegisterOptions } from "./types/IRegisterOptions";
 
 /**
  * CDS Handler.
@@ -21,14 +22,14 @@ export class CDSHandler {
      * @param {Function[]} middlewareClasses Middleware classes
      * @memberof CDSHandler
      */
-    public static register(srv: any, handlerClasses: Function[], middlewareClasses?: Function[]): void {
+    public static register(srv: any, options: IRegisterOptions): void {
         const metadataBuilder = new MetadataBuilder();
 
-        if (middlewareClasses) {
-            this.registerMiddlewareClasses(metadataBuilder, srv, middlewareClasses);
+        if (options.middlewares) {
+            this.registerMiddlewareClasses(metadataBuilder, srv, options.middlewares, options.userChecker);
         }
 
-        this.registerHandlerClasses(metadataBuilder, srv, handlerClasses);
+        this.registerHandlerClasses(metadataBuilder, srv, options.handler, options.userChecker);
     }
 
     /**
@@ -44,9 +45,10 @@ export class CDSHandler {
     private static registerMiddlewareClasses(
         metadataBuilder: MetadataBuilder,
         srv: any,
-        middlewareClasses: Function[]
+        middlewareClasses: Function[],
+        userChecker?: Function
     ): void {
-        const middlewares = metadataBuilder.buildMiddlewareMetadata(middlewareClasses);
+        const middlewares = metadataBuilder.buildMiddlewareMetadata(middlewareClasses, userChecker);
         const globalSortedMiddlewares = middlewares
             .filter(m => m.global)
             .sort((a, b) => {
@@ -79,9 +81,10 @@ export class CDSHandler {
     private static registerHandlerClasses(
         metadataBuilder: MetadataBuilder,
         srv: any,
-        handlerClasses: Function[]
+        handlerClasses: Function[],
+        userChecker?: Function
     ): void {
-        const handlers = metadataBuilder.buildHandlerMetadata(handlerClasses);
+        const handlers = metadataBuilder.buildHandlerMetadata(handlerClasses, userChecker);
         handlers.forEach(handler => {
             handler.actions.forEach(action => {
                 try {

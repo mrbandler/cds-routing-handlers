@@ -4,6 +4,7 @@ import { IRejectMetadataArgs } from "../metadata/args/IRejectMetadataArgs";
 import { IParamMetadataArgs } from "../metadata/args/IParamMetadataArgs";
 import { IUseMetadataArgs } from "../metadata/args/IUseMetadataArgs";
 import { IMiddlewareMetadataArgs } from "../metadata/args/IMiddlewareMetadataArgs";
+import { IUserCheckerMetadataArgs } from "../metadata/args/IUserCheckerMetadataArgs";
 
 /**
  * Metadata arguments storage.
@@ -65,6 +66,15 @@ export class MetadataArgsStorage {
      * @memberof MetadataArgsStorage
      */
     private params: IParamMetadataArgs[] = [];
+
+    /**
+     * User checker metadata arguments.
+     *
+     * @private
+     * @type {IUserCheckerMetadataArgs}
+     * @memberof MetadataArgsStorage
+     */
+    private userChecker: IUserCheckerMetadataArgs[] = [];
 
     /**
      * Handler metadata.
@@ -153,6 +163,16 @@ export class MetadataArgsStorage {
     }
 
     /**
+     * Adds user checker metadata.
+     *
+     * @param {IUserCheckerMetadataArgs} metadata Metadata arguments
+     * @memberof MetadataArgsStorage
+     */
+    public addUserCheckerMetadata(metadata: IUserCheckerMetadataArgs): void {
+        this.userChecker.push(metadata);
+    }
+
+    /**
      * Filters handler metadata for given classes.
      *
      * @param {Function[]} classes Handler classes
@@ -233,6 +253,19 @@ export class MetadataArgsStorage {
     }
 
     /**
+     * Finds a user checker for a given target.
+     *
+     * @param {Function} target Target to find for
+     * @returns {(IUserCheckerMetadataArgs | undefined)} Found user checker
+     * @memberof MetadataArgsStorage
+     */
+    public findUserCheckerWithTarget(target: Function | undefined): IUserCheckerMetadataArgs | undefined {
+        if (target) {
+            return this.userChecker.find(uc => uc.target === target);
+        }
+    }
+
+    /**
      * Resets the storage.
      *
      * @memberof MetadataArgsStorage
@@ -244,5 +277,6 @@ export class MetadataArgsStorage {
         this.actions = [];
         this.rejects = [];
         this.params = [];
+        this.userChecker = [];
     }
 }

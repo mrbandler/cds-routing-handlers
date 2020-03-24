@@ -1,11 +1,14 @@
 import * as path from "path";
 import { CDSHandler } from "./CDSHandler";
 import { MetadataArgsStorage } from "./metadata-builder/MetadataArgsStorage";
+import { ICdsRoutingHandlerOptions } from "./types/ICdsRoutingHandlerOptions";
 
 export * from "./container";
+export * from "./decorators/class/options/IMiddlewareOptions";
 export * from "./decorators/class/Handler";
 export * from "./decorators/class/Use";
 export * from "./decorators/class/Middleware";
+export * from "./decorators/class/UserChecker";
 export * from "./decorators/method/Create";
 export * from "./decorators/method/Read";
 export * from "./decorators/method/Update";
@@ -22,9 +25,11 @@ export * from "./decorators/param/Entities";
 export * from "./decorators/param/Data";
 export * from "./decorators/param/Next";
 export * from "./decorators/param/Locale";
-export * from "./types/ICdsMiddleware";
-export * from "./decorators/class/options/IMiddlewareOptions";
+export * from "./decorators/param/User";
 export * from "./types/ODataOperation";
+export * from "./types/ICdsMiddleware";
+export * from "./types/IUserChecker";
+export * from "./types/ICdsRoutingHandlerOptions";
 
 /**
  * Returns the metadata arguments storage.
@@ -42,12 +47,11 @@ export function getMetadataArgsStorage(): MetadataArgsStorage {
 /**
  * Imports decorated classes from directories.
  *
- * @export
  * @param {string[]} directories Directories to search in
  * @param {string} [formats=[".js", ".ts"]] Formats to import classes from
  * @returns {Function[]} Imported classes
  */
-export function importClassesFromDirectories(directories: string[], formats = [".js", ".ts"]): Function[] {
+function importClassesFromDirectories(directories: string[], formats = [".js", ".ts"]): Function[] {
     const loadFileClasses = function(exported: any, allLoaded: Function[]) {
         if (exported instanceof Function) {
             allLoaded.push(exported);
@@ -83,7 +87,7 @@ export function importClassesFromDirectories(directories: string[], formats = ["
  * @param {(Function[] | string[])} handlers Handlers; either classes directly or the directories where the handlers reside
  * @returns {(srv: any) => void} Function that is used to register all endpoints
  */
-export function createCombinedHandler(handlers: Function[] | string[], middlewares?: Function[]): (srv: any) => void {
+export function createCombinedHandler(options: ICdsRoutingHandlerOptions): (srv: any) => void {
     return (srv: any) => {
         if (!(srv.before && srv.on && srv.after)) {
             console.error("Service (srv) parameter does not seem to be a CDS service implementation");
@@ -92,12 +96,16 @@ export function createCombinedHandler(handlers: Function[] | string[], middlewar
         }
 
         let handlerClasses: Function[];
-        if (handlers && handlers.length) {
-            handlerClasses = (handlers as any[]).filter(controller => controller instanceof Function);
-            const handlerDirs = (handlers as any[]).filter(controller => typeof controller === "string");
+        if (options.handler && options.handler.length) {
+            handlerClasses = (options.handler as any[]).filter(controller => controller instanceof Function);
+            const handlerDirs = (options.handler as any[]).filter(controller => typeof controller === "string");
             handlerClasses.push(...importClassesFromDirectories(handlerDirs));
 
-            CDSHandler.register(srv, handlerClasses, middlewares);
+            CDSHandler.register(srv, {
+                handler: handlerClasses,
+                middlewares: options.middlewares,
+                userChecker: options.userChecker,
+            });
         }
     };
 }

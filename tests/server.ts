@@ -5,6 +5,7 @@ import { Container } from "typedi";
 import { ServiceMiddleware } from "./middlewares/service.middleware";
 import { ServiceTwoMiddleware } from "./middlewares/service.two.middleware";
 import { HandlerMiddleware } from "./middlewares/handler.middleware";
+import { UserCheckerImpl } from "./middlewares/user.checker";
 
 const odatav2proxy = require("@sap/cds-odata-v2-adapter-proxy");
 const cds = require("@sap/cds");
@@ -16,10 +17,11 @@ class Main {
         const genPath = __dirname + "/gen/csn.json";
 
         handler.useContainer(Container);
-        const hdl = handler.createCombinedHandler(
-            [__dirname + "/handlers/**/*.js"],
-            [ServiceMiddleware, ServiceTwoMiddleware, HandlerMiddleware]
-        );
+        const hdl = handler.createCombinedHandler({
+            handler: [__dirname + "/handlers/**/*.js"],
+            middlewares: [ServiceMiddleware, ServiceTwoMiddleware, HandlerMiddleware],
+            userChecker: UserCheckerImpl,
+        });
         cds.serve(genPath)
             .at("odata")
             .in(server)
