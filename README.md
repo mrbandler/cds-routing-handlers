@@ -70,23 +70,32 @@ import { createCombinedHandler } from "cds-routing-handlers";
 const server = express();
 
 // Either:
+const handler = createCombinedHandler({
+    handler: [__dirname + "/handlers/**/*.js"],
+});
+
 cds.serve("./gen/")
     .at("odata")
     .in(server)
-    .with(createCombinedHandler([__dirname + "/handlers/**/*.js"]));
+    .with(handler);
 
 // OR
+
 import { EntityHandler } from "./handlers/entity.handler.ts";
+
+const handler = createCombinedHandler({
+    handler: [EntityHandler],
+});
 
 cds.serve("./gen/")
     .at("odata")
     .in(server)
-    .with(createCombinedHandler([EntityHandler]));
+    .with(handler);
 ```
 
 ### Depencency Injection Support
 
-cds-routing-handlers can be used in conjunction with [typedi](https://github.com/typestack/typedi).
+CDS Routing-Handlers can be used in conjunction with [typedi](https://github.com/typestack/typedi).
 
 ```typescript
 import { useContainer } from "cds-routing-handlers";
@@ -120,7 +129,161 @@ export class GreeterHandler {
 }
 ```
 
-### Complete API
+### Middleware
+
+In addition to the before handler you can implement custom middlewares for either the complete service (global) or a specific entity.
+
+#### Global Middleware
+
+```typescript
+// ./global.middleware.ts
+
+import { ICdsMiddleware, Middleware, Req, Jwt } from "cds-routing-handlers";
+
+@Middleware({ global: true, priority: 1 })
+export class GobalMiddleware implements ICdsMiddleware {
+    // You can inject the request parameters as you would in any other handler.
+    public async use(@Req() req: any, @Jwt() jwt: string): Promise<void> {
+        console.log("I am global middleware prio 1");
+    }
+}
+```
+
+```typescript
+// ./server.ts
+
+import express from "express";
+import { createCombinedHandler } from "cds-routing-handlers";
+import { GlobalMiddleware } from "./global.middleware";
+
+const server = express();
+
+const handler = createCombinedHandler({
+    handler: [__dirname + "/handlers/**/*.js"],
+    middlewares: [GlobalMiddleware],
+});
+
+cds.serve("./gen/")
+    .at("odata")
+    .in(server)
+    .with(handler);
+```
+
+#### Handler Middleware
+
+```typescript
+// ./handler.middleware.ts
+
+import { ICdsMiddleware, Middleware, Req, Jwt } from "cds-routing-handlers";
+
+@Middleware() // Omit options for handler middlewares
+export class HandlerMiddleware implements ICdsMiddleware {
+    // You can inject the request parameters as you would in any other handler.
+    public async use(@Req() req: any, @Jwt() jwt: string): Promise<void> {
+        console.log("I am handler middleware!");
+    }
+}
+```
+
+```typescript
+// ./handlers/entity.handler.ts
+
+import { Handler, Use, OnRead } from "cds-routing-handlers";
+import { HandlerMiddleware } from "../handler.middleware";
+
+@Handler("Entity")
+@Use(HandlerMiddleware)
+export class EntityHandler {
+    @OnRead()
+    public async read(@Srv() srv: any, @Req() req: any): Promise<void> {
+        // Handle the read here...
+    }
+}
+```
+
+```typescript
+// ./server.ts
+
+import express from "express";
+import { createCombinedHandler } from "cds-routing-handlers";
+import { HandlerMiddleware } from "./handler.middleware";
+
+const server = express();
+
+const handler = createCombinedHandler({
+    handler: [__dirname + "/handlers/**/*.js"],
+    middlewares: [HandlerMiddleware],
+});
+
+cds.serve("./gen/")
+    .at("odata")
+    .in(server)
+    .with(handler);
+```
+
+### User Checker
+
+To avoid duplicate code for user retrieval in all handlers over the JWT token you can implement a user checker which lets you inject your custom user object with the `@User()` decorator.
+
+```typescript
+// ./custom.userchecker.ts
+
+import { IUserChecker, UserChecker, Jwt } from "cds-routing-handlers";
+
+export interface IUser {
+    username: string;
+}
+
+@UserChecker() // Omit options for handler middlewares
+export class CustomUserChecker implements IUserChecker {
+    // You can inject the request parameters as you would in any other handler.
+    // NOTE: With one exception the @User() decorator will not work.
+    public async check(@Jwt() jwt: string): Promise<IUser> {
+        // Custom code here to create user from JWT...
+        // Let's fake it here
+        return {
+            username: "mrbandler",
+        };
+    }
+}
+```
+
+```typescript
+// ./handlers/entity.handler.ts
+
+import { Handler, OnRead } from "cds-routing-handlers";
+import { IUser } from "../custom.userchecker";
+
+@Handler("Entity")
+export class EntityHandler {
+    @OnRead()
+    public async read(@User() user: IUser): Promise<void> {
+        // Use your custom user object in the read logic...
+    }
+}
+```
+
+```typescript
+// ./server.ts
+
+import express from "express";
+import { createCombinedHandler } from "cds-routing-handlers";
+import { CustomUserChecker } from "./custom.userchecker";
+
+const server = express();
+
+const handler = createCombinedHandler({
+    handler: [__dirname + "/handlers/**/*.js"],
+    userChecker: CustomUserChecker,
+});
+
+cds.serve("./gen/")
+    .at("odata")
+    .in(server)
+    .with(handler);
+```
+
+### Complete Handler API
 
 ```typescript
 import { Handler } from "cds-routing-handlers";
@@ -351,11 +514,24 @@ export class ParamExampleHandler {
 
 ## 3. Decorator Reference
 
+### Middleware Decorators
+
+| Signature                                                        | Example                                                                                                                                                                      | Description                                                                                                                                                                                                                                                                                   |
+| ---------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `@Middleware(options?: { global?: boolean, priority?: number })` | `@Middleware({ global: true, priority: 1 }) class CustomMiddleware implements ICdsMiddleware` <br />or<br />`@Middleware() class CustomMiddleware implements ICdsMiddleware` | Class that is marked with this decorator is registered as a middleware and needs to implement the `ICdsMiddleware` interface.<br />The middleware can then be used to intercept all incoming request via a global definition or intercept all incoming requests on a specific entity handler. |
+
+### User Checker Decorators
+
+| Signature        | Example                                                          | Description                                                                                                                                                                                                                       |
+| ---------------- | ---------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `@UserChecker()` | `@UserChecker() class CustomUserChecker implements IUserChecker` | Class that is marked with this decorator is registered as a user checker and needs to implement the `IUserChecker` interface.<br />The user checker can then be used to provide a custom user object via the `@User()` decorator. |
+
 ### Handler Decorators
 
-| Signature                   | Example                                | Description                                                                                                                                                                                                                          |
-| --------------------------- | -------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `@Handler(entity?: string)` | `@Handler("Books") class BooksHandler` | Class that is marked with this decorator is registered as a handler and its annotated methods are registered as actions. The entity paramter is used to differentiate and register the correct actions for the corresponding entity. |
+| Signature                          | Example                                    | Description                                                                                                                                                                                                                                                                                                   |
+| ---------------------------------- | ------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `@Handler(entity?: string)`        | `@Handler("Books") class BooksHandler`     | Class that is marked with this decorator is registered as a handler and its annotated methods are registered as actions. The entity parameter is used to differentiate and register the correct actions for the corresponding entity.                                                                         |
+| `@Use(...middlewares: Function[])` | `@Use(MiddlewareClass) class BooksHandler` | A class that is marked with this decorator also needs to be marked with the `@Handler()` decorator to be used. If a handler is implemented the `use` method from the middleware is called every time a new requests comes in, regardless of the action (`CREATE`, `READ`, `UPDATE`, `DELETE`) to be executed. |
 
 ### Handler Action Decorators
 
@@ -392,6 +568,7 @@ In this table we assume that all action handlers a within a `@Handler` decorated
 | `@Data()`              | `onRead(@Data() book: IBook)`               | Injects the data object from a incoming request. It's actually the same as `@ParamObj()` with a different identifier to differentiate between Function/Action imports and other handlers. | `srv.on("READ", "Books", async(req) => { const book = req.data as I Book})`             |
 | `@Next()`              | `onRead(@Next() next: Function)`            | Injects the next handler function for flow control with multiple handlers.                                                                                                                | `srv.on("READ", "Books", async(req, next) => ... )`                                     |
 | `@Locale()`            | `onRead(@Locale() locale: string)`          | Injects the locale of the current requesting user.                                                                                                                                        | `srv.on("READ", "Books", async(req) => const locale = req.user.locale)`                 |
+| `@User()`              | `onRead(@User() user: IUser)`               | Injects the custom user object that is created via the `UserChecker` implementation.                                                                                                      | `N/A`                                                                                   |
 
 ## 4. Example
 
