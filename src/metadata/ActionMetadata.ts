@@ -216,11 +216,11 @@ export class ActionMetadata extends Executor {
      * @returns {*} Execution result
      * @memberof ActionMetadata
      */
-    public async exec(context: IExecContext): Promise<any> {
+    public exec(context: IExecContext): any {
         let result = undefined;
 
         const instance = this._handlerMetadata.instance;
-        const params = await this.buildParams(this._params, context, this._userChecker);
+        const params = this.buildParams(this._params, context, this._userChecker);
 
         if (this._reject) {
             try {

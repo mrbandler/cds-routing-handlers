@@ -185,9 +185,9 @@ export class MiddlewareMetadata extends Executor {
      * @returns {*} Execution result
      * @memberof MiddlewareMetadata
      */
-    public async exec(context: IExecContext): Promise<any> {
+    public exec(context: IExecContext): any {
         const instance = this.instance;
-        const params = await this.buildParams(this._params, context, this._userChecker);
+        const params = this.buildParams(this._params, context, this._userChecker);
 
         if (instance["use"]) {
             return instance.use.apply(instance, params);

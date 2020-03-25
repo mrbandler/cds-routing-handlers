@@ -78,9 +78,9 @@ export class UserCheckerMetadata extends Executor {
      * @returns {*} Execution result
      * @memberof MiddlewareMetadata
      */
-    public async exec(context: IExecContext): Promise<any> {
+    public exec(context: IExecContext): any {
         const instance = this.instance;
-        const params = await this.buildParams(this._params, context);
+        const params = this.buildParams(this._params, context);
 
         if (instance["check"]) {
             return instance.check.apply(instance, params);
