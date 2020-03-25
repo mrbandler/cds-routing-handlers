@@ -30,6 +30,7 @@ export * from "./types/ODataOperation";
 export * from "./types/ICdsMiddleware";
 export * from "./types/IUserChecker";
 export * from "./types/ICdsRoutingHandlerOptions";
+export * from "./types/MiddlewareRuntime";
 
 /**
  * Returns the metadata arguments storage.

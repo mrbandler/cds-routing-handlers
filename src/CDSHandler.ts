@@ -5,6 +5,7 @@ import { ODataOperation } from "./types/ODataOperation";
 import { IExecContext } from "./types/IExecContext";
 import { MiddlewareMetadata } from "./metadata/MiddlewareMetadata";
 import { IRegisterOptions } from "./types/IRegisterOptions";
+import { MiddlewareRuntime } from "./types/MiddlewareRuntime";
 
 /**
  * CDS Handler.
@@ -201,18 +202,34 @@ export class CDSHandler {
      * @memberof CDSHandler
      */
     private static registerMiddleware(srv: any, middleware: MiddlewareMetadata): void {
-        if (middleware.entities) {
-            middleware.entities.forEach(entity => {
-                srv.before("*", entity, async (req: any, next: Function) => {
+        switch (middleware.runtime as MiddlewareRuntime) {
+            case MiddlewareRuntime.Normal:
+                srv.before("*", async (req: any, next: Function) => {
                     const context = this.createExecutionContext(srv, req, next);
                     return await middleware.exec(context);
                 });
-            });
-        } else {
-            srv.before("*", async (req: any, next: Function) => {
-                const context = this.createExecutionContext(srv, req, next);
-                return await middleware.exec(context);
-            });
+
+                break;
+
+            case MiddlewareRuntime.BeforeDefaults:
+                srv._handlers.initial._handlers.unshift({
+                    event: "*",
+                    entity: undefined,
+                    handler: async (req: any, next: Function) => {
+                        const context = this.createExecutionContext(srv, req, next);
+                        return await middleware.exec(context);
+                    },
+                });
+
+                break;
+
+            case MiddlewareRuntime.AfterDefaults:
+                srv._initial("*", async (req: any, next: Function) => {
+                    const context = this.createExecutionContext(srv, req, next);
+                    return await middleware.exec(context);
+                });
+
+                break;
         }
     }
 

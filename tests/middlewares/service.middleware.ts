@@ -1,8 +1,8 @@
-import { Middleware, ICdsMiddleware, Srv } from "../../lib";
+import { Middleware, ICdsMiddleware, Srv, MiddlewareRuntime } from "../../lib";
 
-@Middleware({ global: true, priority: 1 })
+@Middleware({ global: true, priority: 1, runtime: MiddlewareRuntime.BeforeDefaults })
 export class ServiceMiddleware implements ICdsMiddleware {
     public async use(@Srv() srv: any): Promise<void> {
-        console.log("I am global middleware prio 1");
+        console.log("I am global middleware prio 1 (before defaults)");
     }
 }
