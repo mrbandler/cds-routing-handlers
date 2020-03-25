@@ -22,7 +22,7 @@ export abstract class Executor {
      * @returns {*} Result
      * @memberof Executer
      */
-    public abstract async exec(context: IExecContext): Promise<any>;
+    public abstract exec(context: IExecContext): any;
 
     /**
      * Builds a paramter list out of all definied parameter decorators.
@@ -33,11 +33,7 @@ export abstract class Executor {
      * @returns
      * @memberof Executer
      */
-    protected async buildParams(
-        params: ParamMetadata[],
-        context: IExecContext,
-        userChecker?: UserCheckerMetadata
-    ): Promise<any[]> {
+    protected buildParams(params: ParamMetadata[], context: IExecContext, userChecker?: UserCheckerMetadata): any[] {
         const sortedParams = params.sort((a, b) => {
             if (a.index > b.index) return 1;
             if (b.index > a.index) return -1;
@@ -45,7 +41,7 @@ export abstract class Executor {
             return 0;
         });
 
-        const mappedParams = sortedParams.map(param => {
+        return sortedParams.map(param => {
             switch (param.type) {
                 case ParamType.Srv:
                     return context.srv;
@@ -69,8 +65,6 @@ export abstract class Executor {
                     return userChecker ? userChecker.exec(context) : undefined;
             }
         });
-
-        return await Promise.all(mappedParams);
     }
 
     /**

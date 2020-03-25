@@ -12,5 +12,5 @@ export interface IUserChecker {
      * @returns {Promise<any>}
      * @memberof IUserChecker
      */
-    check(...args: any[]): Promise<any>;
+    check(...args: any[]): any;
 }

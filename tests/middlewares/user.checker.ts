@@ -3,7 +3,7 @@ import { IUser } from "../IUser";
 
 @UserChecker()
 export class UserCheckerImpl implements IUserChecker {
-    public async check(@Srv() srv: any): Promise<IUser> {
+    public check(@Srv() srv: any): IUser {
         console.log(srv);
 
         return {
