@@ -1,5 +1,5 @@
 import { ParamMetadata } from "./ParamMetadata";
-import { getFromContainer } from "../index";
+import { getFromContainer, MiddlewareRuntime } from "../index";
 import { ICdsMiddleware } from "../types/ICdsMiddleware";
 import { IMiddlewareMetadataArgs } from "./args/IMiddlewareMetadataArgs";
 import { Executor } from "./base/Executer";
@@ -36,6 +36,15 @@ export class MiddlewareMetadata extends Executor {
      * @memberof MiddlewareMetadata
      */
     private _priority: number;
+
+    /**
+     * Middleware runtime.
+     *
+     * @private
+     * @type {MiddlewareRuntime}
+     * @memberof MiddlewareMetadata
+     */
+    private _runtime: MiddlewareRuntime;
 
     /**
      * Entities on which to apply the middleware.
@@ -93,6 +102,17 @@ export class MiddlewareMetadata extends Executor {
      */
     public get priority(): number {
         return this._priority;
+    }
+
+    /**
+     * Middleware runtime.
+     *
+     * @readonly
+     * @type {(MiddlewareRuntime | undefined)}
+     * @memberof MiddlewareMetadata
+     */
+    public get runtime(): MiddlewareRuntime {
+        return this._runtime;
     }
 
     /**
@@ -155,6 +175,7 @@ export class MiddlewareMetadata extends Executor {
         this._global = args.global;
         this._target = args.target;
         this._priority = args.priority;
+        this._runtime = args.runtime;
     }
 
     /**

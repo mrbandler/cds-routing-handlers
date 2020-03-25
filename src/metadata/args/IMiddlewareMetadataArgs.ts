@@ -1,3 +1,5 @@
+import { MiddlewareRuntime } from "../../types/MiddlewareRuntime";
+
 /**
  * Middleware metadata arguments.
  *
@@ -28,4 +30,12 @@ export interface IMiddlewareMetadataArgs {
      * @memberof IMiddlewareMetadataArgs
      */
     priority: number;
+
+    /**
+     * Middleware runtime.
+     *
+     * @type {MiddlewareRuntime}
+     * @memberof IMiddlewareMetadataArgs
+     */
+    runtime: MiddlewareRuntime;
 }
