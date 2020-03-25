@@ -209,7 +209,7 @@ export class CDSHandler {
                 });
             });
         } else {
-            srv.before("*", async (req: any, next: Function) => {
+            srv._initial("*", async (req: any, next: Function) => {
                 const context = this.createExecutionContext(srv, req, next);
                 return await middleware.exec(context);
             });
