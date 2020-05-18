@@ -17,12 +17,38 @@
 
 ```bash
 $ npm install cds-routing-handlers
-```
 
 OR
 
-```bash
 $ yarn add cds-routing-handlers
+```
+
+Before you can use it you also need to install `reflect-metadata`.
+
+```bash
+$ npm install reflect-metadata
+
+OR
+
+$ yarn add reflect-metadata
+```
+
+Once installed, make sure you import it before using CDS Routing-Handlers.
+My recommendation would be to place the import at the top of your main entry file.
+
+```typescript
+import "reflect-metadata";
+```
+
+Finally, one last step is required to use it. We need to tell the Typescript compiler to use decorators.
+
+Place the following settings in your `tsconfig.json`:
+
+```json
+{
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true
+}
 ```
 
 ## 2. Usage

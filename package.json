@@ -1,6 +1,6 @@
 {
     "name": "cds-routing-handlers",
-    "version": "2.1.1",
+    "version": "2.1.2",
     "description": "Package to route and implement CDS handlers via a class based approach in Typescript.",
     "main": "lib/index.js",
     "repository": "https://github.com/mrbandler/cds-routing-handlers",
@@ -57,10 +57,6 @@
     "dependencies": {
         "glob": "^7.1.6",
         "reflect-metadata": "^0.1.13"
-    },
-    "peerDependencies": {
-        "class-transformer": "^0.2.3",
-        "class-validator": "0.10.1"
     },
     "husky": {
         "hooks": {
