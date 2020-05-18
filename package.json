@@ -58,10 +58,6 @@
         "glob": "^7.1.6",
         "reflect-metadata": "^0.1.13"
     },
-    "peerDependencies": {
-        "class-transformer": "^0.2.3",
-        "class-validator": "0.10.1"
-    },
     "husky": {
         "hooks": {
             "pre-commit": "lint-staged",
