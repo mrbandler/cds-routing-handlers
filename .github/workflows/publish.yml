@@ -1,13 +1,11 @@
-name: Build
+name: Publish
 
 on:
-    push:
-        branches: [master, develop]
-    pull_request:
-        branches: [master]
+    release:
+        types: [published]
 
 jobs:
-    build:
+    publish:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v2
@@ -15,6 +13,7 @@ jobs:
             - uses: actions/setup-node@v1.4.2
               with:
                   node-version: 12
+                  registry-url: https://registry.npmjs.org/
 
             - uses: actions/cache@v2.0.0
               with:
@@ -25,3 +24,9 @@ jobs:
               run: |
                   yarn install
                   yarn build
+
+            - name: Publish to npm
+              run: |
+                  npm publish --access public
+              env:
+                  NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
