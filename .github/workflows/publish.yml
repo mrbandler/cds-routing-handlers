@@ -9,18 +9,23 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v2
+
             - uses: actions/setup-node@v1.4.2
               with:
                   node-version: 12
+                  registry-url: https://registry.npmjs.org/
+
             - uses: actions/cache@v2.0.0
               with:
                   key: cds-routing-handlers
                   path: node_modules/*
+
             - name: Install & Build
               run: |
                   yarn install
-                  yarn
-            - name: Publish
+                  yarn build
+
+            - name: Publish to npm
               run: |
                   npm publish --access public
               env:
