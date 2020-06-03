@@ -36,6 +36,7 @@ jobs:
                   path: lib/*
 
     publish:
+        needs: build
         runs-on: ubuntu-latest
         steps:
             - name: Clone repo
