@@ -19,4 +19,5 @@ jobs:
                 yarn build
             - uses: actions/cache@v2.0.0
               with:
+                  key: cds-routing-handlers
                   path: node_modules/*
