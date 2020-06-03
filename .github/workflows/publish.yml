@@ -5,17 +5,20 @@ on:
         types: [published]
 
 jobs:
-    publish:
+    build:
         runs-on: ubuntu-latest
         steps:
-            - uses: actions/checkout@v2
+            - name: Clone repo
+              uses: actions/checkout@v2
 
-            - uses: actions/setup-node@v1.4.2
+            - name: Setup node environment
+              uses: actions/setup-node@v1.4.2
               with:
                   node-version: 12
                   registry-url: https://registry.npmjs.org/
 
-            - uses: actions/cache@v2.0.0
+            - name: Download cache
+              uses: actions/cache@v2.0.0
               with:
                   key: cds-routing-handlers
                   path: node_modules/*
@@ -24,6 +27,24 @@ jobs:
               run: |
                   yarn install
                   yarn build
+
+            - name: Upload a build artifact
+              uses: actions/upload-artifact@v2
+              with:
+                  name: cds-routing-handlers-artifacts
+                  path: bin/*
+
+    publish:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Clone repo
+              uses: actions/checkout@v2
+
+            - name: Download a Build Artifact
+              uses: actions/download-artifact@v2
+              with:
+                  name: cds-routing-handlers-artifacts
+                  path: bin/*
 
             - name: Publish to npm
               run: |
