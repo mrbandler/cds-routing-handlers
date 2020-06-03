@@ -1,0 +1,27 @@
+name: Publish
+
+on:
+    release:
+        types: [published]
+
+jobs:
+    publish:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v2
+            - uses: actions/setup-node@v1.4.2
+              with:
+                  node-version: 12
+            - uses: actions/cache@v2.0.0
+              with:
+                  key: cds-routing-handlers
+                  path: node_modules/*
+            - name: Install & Build
+              run: |
+                  yarn install
+                  yarn
+            - name: Publish
+              run: |
+                  npm publish --access public
+              env:
+                  NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
