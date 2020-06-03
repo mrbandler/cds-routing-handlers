@@ -22,16 +22,16 @@ jobs:
             - name: Download cache
               uses: actions/cache@v2.0.0
               with:
-                  key: cds-routing-handlers
+                  key: cds-routing-handlers-cache
                   path: node_modules/*
 
-            - name: Install & Build
+            - name: Install and build
               run: |
                   yarn install
                   yarn build
 
-            - name: Upload a build artifact
+            - name: Upload build artifacts
               uses: actions/upload-artifact@v2
               with:
                   name: cds-routing-handlers-artifacts
-                  path: bin/*
+                  path: lib/*
