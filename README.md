@@ -1,6 +1,6 @@
 # CDS Routing-Handlers
 
-[![npm version](https://badge.fury.io/js/cds-routing-handlers.svg)](https://badge.fury.io/js/cds-routing-handlers) [![pipeline status](https://gitlab.com/mrbandler/cds-routing-handlers/badges/master/pipeline.svg)](https://gitlab.com/mrbandler/cds-routing-handlers/commits/master) [![GitHub License](https://img.shields.io/github/license/mrbandler/cds-routing-handlers)](https://github.com/mrbandler/cds-routing-handlers/blob/master/LICENSE)
+[![npm version](https://badge.fury.io/js/cds-routing-handlers.svg)](https://badge.fury.io/js/cds-routing-handlers) [![Actions Status](https://github.com/mrbandler/cds-routing-handlers/workflows/build/badge.svg)](https://github.com/mrbandler/cds-routing-handlers/actions) [![GitHub License](https://img.shields.io/github/license/mrbandler/cds-routing-handlers)](https://github.com/mrbandler/cds-routing-handlers/blob/master/LICENSE)
 
 **Package to route and implement CDS handlers via a class based system in Typescript.**
 
