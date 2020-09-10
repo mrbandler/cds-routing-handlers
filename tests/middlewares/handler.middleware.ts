@@ -1,8 +1,9 @@
-import { ICdsMiddleware, Middleware } from "../../lib";
+import { ICdsMiddleware, Middleware, Req, Jwt } from "../../lib";
 
 @Middleware()
 export class HandlerMiddleware implements ICdsMiddleware {
-    public async use(...args: any[]): Promise<void> {
-        console.log("I am a handler middleware, args: " + JSON.stringify(args));
+    public async use(@Req() req: any, @Jwt() jwt: string): Promise<void> {
+        console.log("I am a handler middleware");
+        console.log({ req: req, jwt: jwt });
     }
 }
