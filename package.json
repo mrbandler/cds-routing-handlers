@@ -29,14 +29,15 @@
     },
     "scripts": {
         "build": "tsc",
-        "build:all": "rimraf ./lib && yarn build && yarn build:test",
+        "build:all": "rm -rf ./lib && npm run build && npm build:test",
         "build:test": "tsc --project ./tests/tsconfig.json && copyfiles -f ./tests/service.cds ./srv && cds build/all --clean",
-        "start:test": "yarn build:test && node --inspect ./srv/server.js"
+        "start:test": "npm run build:test && node --inspect ./srv/server.js"
     },
     "devDependencies": {
         "@commitlint/cli": "^8.3.5",
         "@commitlint/config-conventional": "^8.3.4",
-        "@sap/cds": "^3.31.2",
+        "@sap/cds": "^4.1.9",
+        "@sap/cds-dk": "^3.0.0",
         "@sap/cds-odata-v2-adapter-proxy": "^1.4.12",
         "@types/express": "^4.17.2",
         "@types/node": "^12.12.11",

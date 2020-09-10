@@ -210,25 +210,29 @@ export class CDSHandler {
                 });
 
                 break;
-
             case MiddlewareRuntime.BeforeDefaults:
-                srv._handlers.initial._handlers.unshift({
-                    event: "*",
-                    entity: undefined,
-                    handler: async (req: any, next: Function) => {
+                if (srv?._handlers?.initial?._handlers) {
+                    srv._handlers.initial._handlers.unshift({
+                        event: "*",
+                        entity: undefined,
+                        handler: async (req: any, next: Function) => {
+                            const context = this.createExecutionContext(srv, req, next);
+                            return await middleware.exec(context);
+                        },
+                    });
+                } else {
+                    console.log("WARNING cds-routing-handler: Can't register MiddlewareRuntime.BeforeDefaults Handler");
+                }
+                break;
+            case MiddlewareRuntime.AfterDefaults:
+                if (srv?._initial) {
+                    srv._initial("*", async (req: any, next: Function) => {
                         const context = this.createExecutionContext(srv, req, next);
                         return await middleware.exec(context);
-                    },
-                });
-
-                break;
-
-            case MiddlewareRuntime.AfterDefaults:
-                srv._initial("*", async (req: any, next: Function) => {
-                    const context = this.createExecutionContext(srv, req, next);
-                    return await middleware.exec(context);
-                });
-
+                    });
+                } else {
+                    console.log("WARNING cds-routing-handler: Can't register MiddlewareRuntime.AfterDefaults Handler");
+                }
                 break;
         }
     }
