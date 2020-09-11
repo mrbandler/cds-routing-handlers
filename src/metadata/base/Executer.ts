@@ -14,6 +14,14 @@ import { UserCheckerMetadata } from "../UserCheckerMetadata";
  */
 export abstract class Executor {
     /**
+     * Cloud core functions.
+     *
+     * @private
+     * @memberof Executor
+     */
+    private cloud = require("@sap-cloud-sdk/core");
+
+    /**
      * Abstract exec method, to be implemented in the child class.
      *
      * @protected
@@ -54,7 +62,7 @@ export abstract class Executor {
                 case ParamType.Param:
                     return this.namedParam(param, context.req);
                 case ParamType.Jwt:
-                    return context.req.attr.token || "";
+                    return this.extractJwt(context);
                 case ParamType.Entities:
                     return context.e;
                 case ParamType.Next:
@@ -65,6 +73,37 @@ export abstract class Executor {
                     return userChecker ? userChecker.exec(context) : undefined;
             }
         });
+    }
+
+    /**
+     * Retrieves the JWT token from a given request context object.
+     * Try to get token with some fallback strategys.
+     * @private
+     * @param {*} req Request object to read the JWT token from
+     * @returns {(string | undefined)} JWT token
+     * @memberof ActionMetadata
+     */
+    private extractJwt(context: any): string | undefined {
+        let token;
+        // https://help.sap.com/doc/88b0d45562c04571a8d117bc8b6b3b7a/1.0/en-US/modules/_sap_cloud_sdk_core.html#retrievejwt
+        // cloud needs the incoming message
+        try {
+            token = this.cloud.retrieveJwt(context.req._.req);
+        } catch (error) {
+            // silence
+        }
+        try {
+            if (!token) token = this.cloud.retrieveJwt(context.req);
+        } catch (error) {
+            // silence
+        }
+        try {
+            if (!token) token = context.req.attr.token || "";
+        } catch (error) {
+            // silence
+        }
+
+        return token;
     }
 
     /**
