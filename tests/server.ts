@@ -2,8 +2,8 @@ import "reflect-metadata";
 import * as handler from "../lib/index";
 import express from "express";
 import { Container } from "typedi";
-import { ServiceMiddleware } from "./middlewares/service.middleware";
-import { ServiceTwoMiddleware } from "./middlewares/service.two.middleware";
+import { ServiceBeforeDefaultsMiddleware } from "./middlewares/service.before.defaults.middleware";
+import { ServiceAfterDefaultsMiddleware } from "./middlewares/service.after.defaults.middleware";
 import { HandlerMiddleware } from "./middlewares/handler.middleware";
 import { UserCheckerImpl } from "./middlewares/user.checker";
 
@@ -19,7 +19,7 @@ class Main {
         handler.useContainer(Container);
         const hdl = handler.createCombinedHandler({
             handler: [__dirname + "/handlers/**/*.js"],
-            middlewares: [ServiceMiddleware, ServiceTwoMiddleware, HandlerMiddleware],
+            middlewares: [ServiceBeforeDefaultsMiddleware, ServiceAfterDefaultsMiddleware, HandlerMiddleware],
             userChecker: UserCheckerImpl,
         });
         cds.serve(genPath)
