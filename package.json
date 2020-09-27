@@ -10,7 +10,7 @@
     "bugs": {
         "url": "https://github.com/mrbandler/cds-routing-handlers/issues"
     },
-    "tags": [
+    "keywords": [
         "typescript",
         "controller",
         "handler",
