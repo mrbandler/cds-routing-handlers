@@ -129,7 +129,7 @@ export class ParamMetadata {
         this._name = args.name;
 
         const paramTypes = (Reflect as any).getMetadata("design:paramtypes", args.object, args.method);
-        if (paramTypes !== "undefined") {
+        if (paramTypes !== undefined) {
             this._targetType = paramTypes[args.index];
         }
 
