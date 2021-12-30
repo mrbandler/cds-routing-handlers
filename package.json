@@ -52,7 +52,7 @@
         "lint-staged": "^9.4.3",
         "prettier": "^2.5.1",
         "rimraf": "^3.0.0",
-        "typedi": "^0.10.0",
+        "typedi": "0.8.0",
         "typescript": "^4.5.4"
     },
     "dependencies": {
