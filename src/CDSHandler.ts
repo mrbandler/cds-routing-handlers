@@ -51,7 +51,7 @@ export class CDSHandler {
     ): void {
         const middlewares = metadataBuilder.buildMiddlewareMetadata(middlewareClasses, userChecker);
         const globalSortedMiddlewares = middlewares
-            .filter(m => m.global)
+            .filter((m) => m.global)
             .sort((a, b) => {
                 if (a.priority > b.priority) return 1;
                 if (b.priority > a.priority) return -1;
@@ -59,12 +59,12 @@ export class CDSHandler {
                 return 0;
             });
 
-        globalSortedMiddlewares.forEach(middleware => {
+        globalSortedMiddlewares.forEach((middleware) => {
             this.registerMiddleware(srv, middleware);
         });
 
-        const usageMiddlewares = middlewares.filter(m => !m.global);
-        usageMiddlewares.forEach(middleware => {
+        const usageMiddlewares = middlewares.filter((m) => !m.global);
+        usageMiddlewares.forEach((middleware) => {
             this.registerMiddleware(srv, middleware);
         });
     }
@@ -86,8 +86,8 @@ export class CDSHandler {
         userChecker?: Function
     ): void {
         const handlers = metadataBuilder.buildHandlerMetadata(handlerClasses, userChecker);
-        handlers.forEach(handler => {
-            handler.actions.forEach(action => {
+        handlers.forEach((handler) => {
+            handler.actions.forEach((action) => {
                 try {
                     switch (action.handler) {
                         case HandlerType.Before:
@@ -108,7 +108,7 @@ export class CDSHandler {
                         case HandlerType.After:
                             this.registerAfterHandler(srv, action);
                     }
-                } catch (error) {
+                } catch (error: any) {
                     console.error(error.message);
                 }
             });
