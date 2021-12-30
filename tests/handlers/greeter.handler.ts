@@ -19,10 +19,6 @@ export class GreeterHandler {
         @Data() data: IData,
         @User() user: IUser
     ): Promise<IData[]> {
-        console.log(next);
-        console.log(data);
-        console.log(user);
-
         return [
             {
                 Id: "8HEXDIG-4HEXDIG-4HEXDIG-4HEXDIG-12HEXDIG",
@@ -44,7 +40,7 @@ export class GreeterHandler {
 
     @AfterRead()
     public async afterRead(@Req() req: any, @Entities() entities: IData[]): Promise<IData[]> {
-        return entities.map(e => {
+        return entities.map((e) => {
             e.Message = "After read was here!";
             return e;
         });

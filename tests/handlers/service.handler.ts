@@ -9,12 +9,12 @@ interface IParams {
 
 @Handler()
 export class ServiceHandler {
-    @Inject()
+    @Inject(() => GreeterService)
     private greeterService!: GreeterService;
 
     @Func("hello")
     public async hello(@Req() req: any, @Param("name") name: string, @Jwt() jwt: string): Promise<string> {
-        console.log(req);
+        console.log("Function hello");
         return await this.greeterService.greet(name);
     }
 
@@ -25,10 +25,11 @@ export class ServiceHandler {
         @Param("title") title: string,
         @Param("name") name: string,
         @ParamObj() params: IParams
-    ): Promise<void> {
-        console.log(req);
-        console.log(srv);
-        console.log(title, name);
-        console.log(params);
+    ): Promise<IParams> {
+        console.log("Action greeter");
+        return {
+            title,
+            name,
+        };
     }
 }

@@ -5,7 +5,6 @@ import { IUser } from "../IUser";
 export class UserCheckerImpl implements IUserChecker {
     public check(@Srv() srv: any): IUser {
         console.log("I am UserChecker");
-        console.log(srv);
 
         return {
             username: "mrbandler",

@@ -1,17 +1,16 @@
 import "reflect-metadata";
 import * as handler from "../lib/index";
+import cds from "@sap/cds";
+import odatav2proxy from "@sap/cds-odata-v2-adapter-proxy";
 import express from "express";
 import { Container } from "typedi";
 import { HandlerMiddleware } from "./middlewares/handler.middleware";
 import { UserCheckerImpl } from "./middlewares/user.checker";
 
-const odatav2proxy = require("@sap/cds-odata-v2-adapter-proxy");
-const cds = require("@sap/cds");
-
 class Main {
     public static run(): void {
         const server = express();
-        const port = process.env.PORT || 3001;
+        const port = process.env.PORT ? parseInt(process.env.PORT) : 3001;
         const genPath = __dirname + "/gen/csn.json";
 
         handler.useContainer(Container);
