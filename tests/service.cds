@@ -1,6 +1,11 @@
 service TestService {
     function hello(name: String) returns String;
-    action greeter(title: String, name: String);
+    action greeter(title: String, name: String) returns GreeterReturn;
+
+    type GreeterReturn {
+        title: String;
+        name: String;
+    }
 
     entity Greeter {
         key Id: String;

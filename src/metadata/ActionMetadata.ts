@@ -225,7 +225,7 @@ export class ActionMetadata extends Executor {
         if (this._reject) {
             try {
                 result = instance[this._method].apply(instance, params);
-            } catch (error) {
+            } catch (error: any) {
                 if (this._reject.appendErrorMessage) {
                     context.req.reject(this._reject.code, `${this._reject.message}: ${error.message}`);
                 } else {
