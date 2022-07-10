@@ -30,7 +30,7 @@
     "scripts": {
         "build": "tsc",
         "build:all": "rimraf ./lib && yarn build && yarn build:test",
-        "build:test": "tsc --project ./tests/tsconfig.json && copyfiles -f ./tests/service.cds ./srv && cds build/all --clean",
+        "build:test": "tsc --project ./tests/tsconfig.json && copyfiles -f ./tests/services.cds ./tests/schema.cds ./srv && cds build/all --clean",
         "start:test": "yarn build:test && node --inspect ./srv/server.js",
         "prepare": "husky install"
     },
