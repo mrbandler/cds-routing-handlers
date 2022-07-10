@@ -1,4 +1,4 @@
-import { Handler, Req, OnRead, OnReject, AfterRead, Entities, Next, Data, Use, User } from "../../lib";
+import { Handler, Req, OnRead, OnReject, AfterRead, Entities, Next, Data, Use, User, Jwt } from "../../lib";
 import { HandlerMiddleware } from "../middlewares/handler.middleware";
 import { IUser } from "../IUser";
 
@@ -17,8 +17,12 @@ export class GreeterHandler {
         @Req() req: any,
         @Next() next: Function,
         @Data() data: IData,
-        @User() user: IUser
+        @User() user: IUser,
+        @Jwt() jwt: string
     ): Promise<IData[]> {
+        console.log("I am the ReadMiddleware");
+        console.log(`My jwt is ${jwt ? jwt : "empty"}`);
+
         return [
             {
                 Id: "8HEXDIG-4HEXDIG-4HEXDIG-4HEXDIG-12HEXDIG",
