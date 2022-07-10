@@ -1,6 +1,6 @@
 {
     "name": "cds-routing-handlers",
-    "version": "3.0.6",
+    "version": "3.0.7",
     "description": "Package to route and implement CDS handlers via a class based approach in Typescript.",
     "main": "lib/index.js",
     "repository": "https://github.com/mrbandler/cds-routing-handlers",
@@ -56,7 +56,6 @@
         "typescript": "^4.5.4"
     },
     "dependencies": {
-        "@sap-cloud-sdk/core": "^1.53.0",
         "glob": "^7.2.0",
         "reflect-metadata": "^0.1.13"
     },

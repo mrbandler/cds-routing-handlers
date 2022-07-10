@@ -2,6 +2,7 @@ import { ParamMetadata } from "../ParamMetadata";
 import { IExecContext } from "../../types/IExecContext";
 import { ParamType } from "../../types/ParamType";
 import { UserCheckerMetadata } from "../UserCheckerMetadata";
+import { retrieveJwt } from "./CloudSdkReplacement";
 
 /**
  * Abstract executer class.
@@ -13,14 +14,6 @@ import { UserCheckerMetadata } from "../UserCheckerMetadata";
  * @class Executer
  */
 export abstract class Executor {
-    /**
-     * Cloud core functions.
-     *
-     * @private
-     * @memberof Executor
-     */
-    private cloud = require("@sap-cloud-sdk/core");
-
     /**
      * Abstract exec method, to be implemented in the child class.
      *
@@ -49,7 +42,7 @@ export abstract class Executor {
             return 0;
         });
 
-        return sortedParams.map(param => {
+        return sortedParams.map((param) => {
             switch (param.type) {
                 case ParamType.Srv:
                     return context.srv;
@@ -85,15 +78,14 @@ export abstract class Executor {
      */
     private extractJwt(context: any): string | undefined {
         let token;
-        // https://help.sap.com/doc/88b0d45562c04571a8d117bc8b6b3b7a/1.0/en-US/modules/_sap_cloud_sdk_core.html#retrievejwt
-        // cloud needs the incoming message
+
         try {
-            token = this.cloud.retrieveJwt(context.req._.req);
+            token = retrieveJwt(context.req._.req);
         } catch (error) {
             // silence
         }
         try {
-            if (!token) token = this.cloud.retrieveJwt(context.req);
+            if (!token) token = retrieveJwt(context.req);
         } catch (error) {
             // silence
         }

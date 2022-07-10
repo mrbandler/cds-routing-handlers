@@ -260,7 +260,7 @@
     "@sap-cloud-sdk/util" "^1.53.0"
     axios "^0.21.1"
 
-"@sap-cloud-sdk/core@^1.41", "@sap-cloud-sdk/core@^1.53.0":
+"@sap-cloud-sdk/core@^1.41":
   version "1.53.0"
   resolved "https://registry.yarnpkg.com/@sap-cloud-sdk/core/-/core-1.53.0.tgz#6882d58260fa0c72d068ecb7083418b16920c2cd"
   integrity sha512-xCiEYiGi7PAQNfzmYmOWRw6oBjIzmiv6Yag8haTRPqLo2Aox6pqEfhbKunzqi6wJPUSgJByW696nzx5CY6BCjQ==
